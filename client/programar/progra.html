@@ -1,11 +1,37 @@
+
 <template name="programar" >
-    {{#autoForm collection="progra" id="insertProgramarForm" type="insert" }}
-        {{#if afFieldIsInvalid name='alumno_id'}} 
-            <span class="help-block">{{afFieldMessage name='alumno_id'}}</span>
-        {{/if}}
-        {{> afQuickField name='alumno_id'}}
-        {{> afQuickField name='materias_id' options=getOptions}}
-        
-        <button type="submit" class="btn btn-primary">Insert</button>
-    {{/autoForm}}
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                {{> quickForm collection="progra" schema=prograShema id="insertPrograform1" type="insert" validation="error" }}
+
+                {{#autoForm collection="progra" id="insertProgramarForm2" type="insert" }}
+                    <div class="form-group{{#if afFieldIsInvalid name='alumno_id'}} has-error{{/if}}">
+                        <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        {{> afFieldInput name='alumno_id'}}
+                        <span class="input-group-addon">/each</span>
+                        </div>
+                        {{#if afFieldIsInvalid name='alumno_id'}}
+                        <span class="help-block">{{afFieldMessage name='alumno_id'}}</span>
+                        {{/if}}
+                    </div>
+                    
+                    {{> afQuickField name='materias_id' options=getOptions }}
+                    
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                {{/autoForm}}
+            
+                {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
+                    {{#if afFieldIsInvalid name='alumno_id'}}
+                        <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
+                    {{/if}}
+                    {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
+                    {{> afQuickField name='materias_id' options=getOptions }}
+                    
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                {{/autoForm}}
+        </div>
+        <div></div>
+    </div>
 </template>

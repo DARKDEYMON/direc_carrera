@@ -2,7 +2,10 @@ import { Template } from "meteor/templating";
 
 
 Template.programar.helpers({
-    
+
+    idAlumno: function(){
+        return FlowRouter.getParam('id');
+    },
     getOptions: function() {
         var cursor = materias.find();
         //console.log(cursor);
@@ -16,7 +19,8 @@ Template.programar.helpers({
 
 
 Template.programar.events({ 
-    'click submit': function(event, template) { 
-         console.log("aqui");
+    'submit form': function(event, template) {
+        var id = FlowRouter.getParam('id');
+        console.log(id);
     } 
 });
