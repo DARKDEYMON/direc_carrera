@@ -1,0 +1,11 @@
+<template name="programar" >
+    {{#autoForm collection="progra" id="insertProgramarForm" type="insert" }}
+        {{#if afFieldIsInvalid name='alumno_id'}} 
+            <span class="help-block">{{afFieldMessage name='alumno_id'}}</span>
+        {{/if}}
+        {{> afQuickField name='alumno_id'}}
+        {{> afQuickField name='materias_id' options=getOptions}}
+        
+        <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+</template>
