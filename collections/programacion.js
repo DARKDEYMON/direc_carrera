@@ -2,6 +2,18 @@ import SimpleSchema from 'simpl-schema';
 
 SimpleSchema.extendOptions(['autoform']);
 
+SimpleSchema.setDefaultMessages({
+    initialLanguage: 'en',
+    messages: {
+      en: {
+        required: '{{label}} es requerido',
+      },
+      es: {
+        required: '{{label}} es requerido',
+      },
+    },
+});
+
 progra = new Mongo.Collection("progra");
 
 prograShema = new SimpleSchema({
@@ -9,6 +21,12 @@ prograShema = new SimpleSchema({
         type : String,
         label : "ID DE ALUMNO",
         regEx: SimpleSchema.RegEx.Id,
+        /*
+        "regEx": [
+            {msg: "Default Message"},
+            {exp: SimpleSchema.RegEx.Url, msg: "You call that a URL?"}
+          ],
+        */
         optional: false
     },
     materias_id :{
@@ -19,6 +37,16 @@ prograShema = new SimpleSchema({
         autoform: {
             firstOption : '(Seleccione una materia)',
         }
+    },
+    dateInsert : {
+        type : Date,
+        label :"Fecha de insercion",
+        autoValue : function(){
+            return new Date();
+        },
+        autoform: {
+			type:"hidden"
+		}
     }
 },{tracker: Tracker});
 
