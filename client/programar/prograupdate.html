@@ -3,6 +3,14 @@
         <div></div>
         <div>
             {{> quickForm collection="progra"  id=updateProgra doc=docUpdate type="update" }}
+
+            {{#autoForm collection="progra" id="insertProgramarForm3" type="update" doc=docUpdate }}
+                    
+                    {{> afQuickField name='alumno_id' value=idAlumno type="hidden" }}
+                    {{> afQuickField name='materias_id' options=getOptions }}
+                    
+                    <button type="submit" class="btn btn-primary">Insert</button>
+            {{/autoForm}}
         </div>
         <div></div>
     </div>
