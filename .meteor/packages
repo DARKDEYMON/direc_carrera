@@ -28,3 +28,7 @@ kadira:flow-router
 kadira:blaze-layout
 aldeed:autoform
 nilsdannemann:pdfmake
+#meteorsteam:meteor-postgres
+austinrivas:postgresql
+arillo:flow-router-helpers
+aldeed:delete-button

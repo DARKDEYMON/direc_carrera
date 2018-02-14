@@ -47,7 +47,85 @@ prograShema = new SimpleSchema({
         autoform: {
 			type:"hidden"
 		}
+    },
+    /*
+    ult_usuario :{
+        type : String,
+        // esta funcion en produccion
+        autoValue :function(){
+            return "asdjbmkkjh";
+        }
+    },
+    estado : {
+        type : String,
+    },
+    marcador : {
+        type : String,
+    },
+    pparcial : {
+        type : Number,
+    },
+    sparcial : {
+        type : Number,
+    },
+    tparcial : {
+        type : Number,
+    },
+    cparcial : {
+        type : Number
+    },
+    promparcial : {
+        type : Number,
+    },
+    pract : {
+        type : Number,
+    },
+    prompract : {
+        type : Number,
+    },
+    lab :{
+        type : Number,
+    },
+    promlab : {
+        type : Number,
+    },
+    notapre : {
+        type : Number,
+    },
+    exfinal : {
+        type: Number,
+    },
+    promexfinal :{
+        type : Number,
+    },
+    nota : {
+        type : Number,
+    },
+    nota_2da : {
+        type : Number,
+    },
+    nota_ex_mesa : {
+        type : Number,
+    },
+    obserbacion : {
+        type : String,
+    },
+    num_2do_turno : {
+        type : Number,
+    },
+    tipo_prog : {
+        type : String,
+    },
+    metodo_programacion : {
+        type : String,
+    },
+    _estado : {
+        type : String,
+    },
+    tipo_programacion : {
+        type : String,
     }
+    */
 },{tracker: Tracker});
 
 progra.attachSchema(prograShema);
