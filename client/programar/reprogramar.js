@@ -1,15 +1,18 @@
 Template.reprogramar.onCreated(function(){
-    this.showform = new ReactiveVar( true );
+    this.showform = new ReactiveVar( false );
 });
 
 
 Template.reprogramar.helpers({
     /* cambio de nombre de foranes */
-    nombreMateria: function(id){
+    nombreMateria : function(id){
         return materias.findOne({_id:id}).name;
     },
+    nombreSigla : function(id){
+        return materias.findOne({_id:id}).sigla;
+    },
     /* materiasd q tiene programadas */
-    materiasProgra: function() {
+    materiasProgra : function() {
         var id = FlowRouter.getParam('id');
         res = progra.find({alumno_id:id}).fetch();
         //console.log(res);
@@ -21,12 +24,16 @@ Template.reprogramar.helpers({
         console.log(c);
         return c;
     },
-    getOptions: function() {
+    getOptions : function() {
         var cursor = materias.find();
         //console.log(cursor);
         return cursor.map(function(doc){
             return {label: doc.sigla, value: doc._id};
         });
+    },
+    showform : function(){
+        //console.log(Template.instance().showform.get('showform')+"aqui");
+        return Template.instance().showform.get('showform');
     }
 });
 

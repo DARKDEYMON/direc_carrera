@@ -3,6 +3,8 @@
     <div class="grid-sis">
         <div></div>
         <div>
+                <h1>Nueva programacion</h1>
+                {{!--
                 {{> quickForm collection="progra" schema=prograShema id="insertPrograform1" type="insert" validation="error" }}
 
                 {{#autoForm collection="progra" id="insertProgramarForm2" type="insert" }}
@@ -21,7 +23,10 @@
                     
                     <button type="submit" class="btn btn-primary">Insert</button>
                 {{/autoForm}}
-            
+
+                --}}
+
+
                 {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
                     {{#if afFieldIsInvalid name='alumno_id'}}
                         <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>

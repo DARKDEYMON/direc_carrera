@@ -3,12 +3,13 @@
         <div></div>
         <div>			
                 <div class="container">
-                    <h2>Bordered Table</h2>
+                    <h2>Materias Programadas</h2>
                     <p>The .table-bordered class adds borders to a table:</p>            
                     <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>Materias</th>
+                          <th>Sigla</th>
                           <th>Fecha de programacion</th>
                           <th>
                               Reprogramar
@@ -19,6 +20,7 @@
                         {{#each materiasProgra }}
                             <tr>
                                 <td>{{ nombreMateria materias_id }}</td>
+                                <td>{{ nombreSigla materias_id }}</td>
                                 <td>{{ dateInsert }}</td>
                                 <td>
                                     {{> quickRemoveButton collection="progra" _id=this._id class="btn btn-danger"}}
@@ -26,7 +28,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                
+                                {{#if showform }}
                                     <td colspan="3">
                                         {{#autoForm collection="progra" id=this._id type="update" doc=this }}                    
                                             {{> afQuickField name='alumno_id' type="hidden" }}
@@ -34,7 +36,7 @@
                                             <button type="submit" class="btn btn-primary">Insert</button>
                                         {{/autoForm}}
                                     </td>
-                                
+                                {{/if}}
                             </tr>
                         {{/each}}
                       </tbody>
@@ -43,5 +45,6 @@
         </div>
         <div></div>
     </div>
+
     {{>programar}}
 </template>
