@@ -1,0 +1,29 @@
+<template name="listalumnos">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <h2>Alumnos</h2>
+                <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Reprogramacion/Programacion</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {{#each alumnosQuery }}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ lastName }}</td>
+                                    <td>
+                                        <a href="{{ pathFor 'reprogramacion' id=_id}}" class="btn btn-primary">Reprogramacion/Programacion</a>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                </table>
+        </div>
+        <div></div>
+    </div>
+</template>

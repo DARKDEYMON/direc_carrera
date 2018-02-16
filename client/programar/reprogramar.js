@@ -46,7 +46,7 @@ Template.reprogramar.events({
         else{
             template.showform.set(true);
         }
-        console.log(Template.instance().showform.get());
+        //console.log(Template.instance().showform.get());
         //Session.set('editMode',!Session.get('editMode'));
         //console.log(Session.get('editMode'));
     }
