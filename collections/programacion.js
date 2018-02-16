@@ -1,4 +1,5 @@
 import SimpleSchema from 'simpl-schema';
+import { error } from 'util';
 
 SimpleSchema.extendOptions(['autoform']);
 
@@ -7,9 +8,11 @@ SimpleSchema.setDefaultMessages({
     messages: {
       en: {
         required: '{{label}} es requerido',
+        yaProgramado : "Materia ya Programada"
       },
       es: {
         required: '{{label}} es requerido',
+        yaProgramado : "Materia ya Programada"
       },
     },
 });
@@ -34,8 +37,15 @@ prograShema = new SimpleSchema({
         label : "MATERIAS",
         regEx: SimpleSchema.RegEx.Id,
         optional: false,
-        autoform: {
+        autoform : {
             firstOption : '(Seleccione una materia)',
+        },
+        custom : function(){
+            //console.log(this.obj.$set);
+            modifi = this.obj.$set || this.obj;
+            //console.log(progra.find({materias_id:modifi.materias_id,alumno_id:modifi.alumno_id}).count());
+            if(!(progra.find({materias_id:modifi.materias_id,alumno_id:modifi.alumno_id}).count()===0))
+                return "yaProgramado";
         }
     },
     dateInsert : {

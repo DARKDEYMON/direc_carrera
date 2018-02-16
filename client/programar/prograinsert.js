@@ -21,6 +21,6 @@ Template.programar.helpers({
 Template.programar.events({ 
     'submit form': function(event, template) {
         var id = FlowRouter.getParam('id');
-        console.log(id);
+        //console.log(id);
     } 
 });
