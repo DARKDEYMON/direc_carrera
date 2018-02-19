@@ -126,9 +126,15 @@ prograShema = new SimpleSchema({
     tipo_prog : {
         type : String,
     },
+    */
     metodo_programacion : {
         type : String,
+        label : "tipo programacion",
+        autoform: {
+			type:"hidden"
+		}
     },
+    /*
     _estado : {
         type : String,
     },

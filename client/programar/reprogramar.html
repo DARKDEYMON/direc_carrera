@@ -11,9 +11,8 @@
                           <th>Materias</th>
                           <th>Sigla</th>
                           <th>Fecha de programacion</th>
-                          <th>
-                              Reprogramar
-                          </th>
+                          <th>Tipo de Programacion</th>
+                          <th>Reprogramar</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -22,6 +21,7 @@
                                 <td>{{ nombreMateria materias_id }}</td>
                                 <td>{{ nombreSigla materias_id }}</td>
                                 <td>{{ dateInsert }}</td>
+                                <th>{{ metodo_programacion }}</th>
                                 <td>
                                     {{> quickRemoveButton collection="progra" _id=this._id class="btn btn-danger"}}
                                     <button class="btn btn-primary myButton">Reprogramar</button>
@@ -30,8 +30,10 @@
                             <tr>
                                 {{#if showform }}
                                     <td colspan="4">
-                                        {{#autoForm collection="progra" id=this._id type="update" doc=this }}                    
+                                        {{#autoForm collection="progra" id=this._id type="update" doc=this }}
+
                                             {{> afQuickField name='alumno_id' type="hidden" }}
+                                            {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
                                             {{> afQuickField name='materias_id' options=getOptions }}                                            
                                             <button type="submit" class="btn btn-primary">Insert</button>
                                         {{/autoForm}}

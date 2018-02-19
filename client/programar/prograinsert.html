@@ -32,6 +32,8 @@
                         <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
                     {{/if}}
                     {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
+                    {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
+                    
                     {{> afQuickField name='materias_id' options=getOptions }}
                     
                     <button type="submit" class="btn btn-primary">Insert</button>

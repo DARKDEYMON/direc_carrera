@@ -18,3 +18,11 @@ alumnoShema = new SimpleSchema({
 });
 
 alumno.attachSchema(alumnoShema);
+
+import { Index, MinimongoEngine } from 'meteor/easy:search'
+
+alumnoIndex = new Index({
+    collection: alumno,
+    fields: ['name','lastName'],
+    engine: new MinimongoEngine(),
+});

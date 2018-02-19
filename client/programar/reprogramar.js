@@ -34,7 +34,16 @@ Template.reprogramar.helpers({
     showform : function(){
         //console.log(Template.instance().showform.get('showform')+"aqui");
         return Template.instance().showform.get('showform');
+    },
+    /*
+    idTipoProgramacion: function(){
+        dir = FlowRouter.current().route.name;
+        //console.log(dir);
+        if(dir == "reprogramacion")
+            return "REPROGRAMACION";
+        return "DESCONOSIDO";
     }
+    */
 });
 
 Template.reprogramar.events({ 

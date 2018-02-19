@@ -3,16 +3,31 @@
         <div></div>
         <div>
                 <h2>Alumnos</h2>
+                <div class="row">
+                        <div class="col-lg-6">
+                          <div class="input-group">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                            <!--<input type="text" class="form-control" placeholder="Search for...">-->
+                            {{> EasySearch.Input index=alumnoIndex  attributes=atrrSearch }}
+                          </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+                
+                
                 <table class="table table-bordered">
                         <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Reprogramacion/Programacion</th>
-                          </tr>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Reprogramacion/Programacion</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            {{#each alumnosQuery }}
+                            <tr>
+                            </tr>
+                            {{#EasySearch.Each index=alumnoIndex }}
                                 <tr>
                                     <td>{{ name }}</td>
                                     <td>{{ lastName }}</td>
@@ -20,9 +35,12 @@
                                         <a href="{{ pathFor 'reprogramacion' id=_id}}" class="btn btn-primary">Reprogramacion/Programacion</a>
                                     </td>
                                 </tr>
-                            {{/each}}
+                            {{else}}
+                                <p class="alert alert-warning">No existen coinsidencias</p>
+                            {{/EasySearch.Each}}
                         </tbody>
                 </table>
+                {{> EasySearch.Pagination index=alumnoIndex maxPages=10 }}
         </div>
         <div></div>
     </div>

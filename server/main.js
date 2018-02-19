@@ -1,5 +1,24 @@
 import { Meteor } from 'meteor/meteor';
+
+
 /*
+var PORT = 5432 // From test/settings/test.pg.json
+
+var CONN_STR = Meteor.settings.connStr ||
+  'postgres://' // Using numtel:pg-server to run tests
+  + 'postgres' + ':' // Default user is same as system user
+  + 'postgres'               // From defaultpw file in NPM package
+  + '@localhost:' + PORT   // Port as specified in .pg.json file (default: 5432)
+  + '/jachasun'           // Default database
+
+console.log(CONN_STR);
+var CHANNEL = Meteor.settings.channel || 'test_channel';
+liveDb = new LivePg("postgresql://postgres:postgres@127.0.0.1:5432/jachasun", CHANNEL);
+*/
+
+
+/*
+//esto es prueba
 alumnopg = new SQL.Collection('alumno','postgres://postgres:123456789@localhost/pruebas'); // postgres
 
 alumnopg.createTable({name: ['$string'],lastname: ['$string']}).save();
@@ -13,15 +32,15 @@ alumnopg.insert({
 /*
 a = new pg.Client({
   user: 'postgres',
+  password: 'postgres',
   host: '127.0.0.1',
-  database: 'pruebas',
-  password: '123456789',
+  database: 'jachasun',
   port: 5432
 });
 
 a.connect();
 
-a.query('select * from alumno', (err, res) => {
+a.query('select * from alumnos', (err, res) => {
   console.log(err, res)
   a.end()
 });
