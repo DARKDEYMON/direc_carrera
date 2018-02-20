@@ -1,0 +1,15 @@
+<template name="inserAsigDct">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            {{#autoForm collection="designacionDct" id="insertDesignacionDctShema" type="insert" }}
+
+                {{> afQuickField name='docente_id' type="hidden" value=idDocente }}
+                {{> afQuickField name='materia_id' options=getMaterias }}
+                
+                <button type="submit" class="btn btn-primary">Insert</button>
+            {{/autoForm}}
+        </div>
+        <div></div>
+    </div>
+</template>

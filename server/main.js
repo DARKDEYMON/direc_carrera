@@ -75,7 +75,7 @@ Meteor.startup(() => {
   }
 
   if(alumno.find().count()===0){
-    var sampleMaterias = [
+    var sampleAlumnos = [
       {
         name : "Reynaldo",
         lastName : "Pereira"
@@ -93,8 +93,36 @@ Meteor.startup(() => {
         lastName : "Paucara"
       }
     ];
-    _.each(sampleMaterias,function(dat){
+    _.each(sampleAlumnos,function(dat){
       alumno.insert(dat);
+    });
+  }
+
+  if(docentes.find().count()===0){
+    var sampleDocentes = [
+      {
+        nombre : "Alfredo",
+        paterno : "Peñaranda",
+        materno : "Loza"
+      },
+      {
+        nombre : "Gabriel",
+        paterno : "Rene",
+        materno : "Calvo"
+      },
+      {
+        nombre : "Mariscal",
+        paterno : "Campo",
+        materno : "Isla"
+      },
+      {
+        nombre : "Roberto",
+        paterno : "Bohorquez",
+        materno : "Ayala"
+      }
+    ];
+    _.each(sampleDocentes,function(dat){
+      docentes.insert(dat);
     });
   }
 });

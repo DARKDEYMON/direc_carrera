@@ -1,0 +1,33 @@
+<template name="asignacionDct">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <h2>Materias Asignadas</h2>
+                                
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Sigla</th>
+                      <th>Gestion</th>
+                      <th>Periodo</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each materiasAsig }}
+                        <tr>
+                            <td>{{ nombreSigla materia_id }}</td>
+                            <td>{{ gestion }}</td>
+                            <td>{{ periodo }}</td>
+                            <td>
+                                {{> quickRemoveButton collection="designacionDct" _id=this._id class="btn btn-danger"}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+        </div>
+        <div></div>
+    </div>
+    {{>inserAsigDct}}
+</template>

@@ -52,6 +52,9 @@ prograShema = new SimpleSchema({
         type : Date,
         label :"Fecha de insercion",
         autoValue : function(){
+            if (this.isSet || this.isUpdate) {
+                return this.value;
+            }
             return new Date();
         },
         autoform: {
