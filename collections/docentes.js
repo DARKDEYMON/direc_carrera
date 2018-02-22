@@ -22,3 +22,11 @@ docenteShema = new SimpleSchema({
 },{tracker : Tracker});
 
 docentes.attachSchema(docenteShema);
+
+import { Index, MinimongoEngine } from 'meteor/easy:search'
+
+docenteIndex = new Index({
+    collection: docentes,
+    fields: ['nombre','paterno','materno'],
+    engine: new MinimongoEngine(),
+});

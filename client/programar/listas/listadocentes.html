@@ -1,0 +1,47 @@
+<template name="listdocentes">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <h2>Docentes</h2>
+                <div class="row">
+                        <div class="col-lg-6">
+                          <div class="input-group">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                            <!--<input type="text" class="form-control" placeholder="Search for...">-->
+                            {{> EasySearch.Input index=docenteIndex  attributes=atrrSearch }}
+                          </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->               
+                <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Reprogramacion/Programacion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                            {{#EasySearch.Each index=docenteIndex }}
+                                <tr>
+                                    <td>{{ nombre }}</td>
+                                    <td>{{ paterno }}</td>
+                                    <td>{{ materno }}</td>
+                                    <td>
+                                        <a href="{{ pathFor 'docentesasig' id=_id}}" class="btn btn-primary">Asignar/Reasignar</a>
+                                    </td>
+                                </tr>
+                            {{else}}
+                                <p class="alert alert-warning">No existen coinsidencias</p>
+                            {{/EasySearch.Each}}
+                        </tbody>
+                </table>
+                {{> EasySearch.Pagination index=docenteIndex maxPages=10 }}
+        </div>
+        <div></div>
+    </div>
+</template>

@@ -31,8 +31,8 @@ nilsdannemann:pdfmake
 
 #meteorsteam:meteor-postgres
 #austinrivas:postgresql
+#numtel:pg
 
 arillo:flow-router-helpers
 aldeed:delete-button
-numtel:pg
 easy:search

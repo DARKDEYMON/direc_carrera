@@ -8,6 +8,8 @@
     "@babel/runtime": "^7.0.0-beta.36",
     "knex": "^0.13.0",
     "meteor-node-stubs": "^0.3.2",
+    "pg": "^7.4.1",
+    "promised-postgres": "^1.0.0-1",
     "simpl-schema": "^1.4.2"
   }
 }

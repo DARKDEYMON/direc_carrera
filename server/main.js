@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+Postgres = require('promised-postgres');
+const { Pool, Client } = require('pg')
 
 
 /*
@@ -27,23 +29,6 @@ alumnopg.insert({
   name:'Reynaldo',
   lastname:'Pereira'
 }).save();
-*/
-
-/*
-a = new pg.Client({
-  user: 'postgres',
-  password: 'postgres',
-  host: '127.0.0.1',
-  database: 'jachasun',
-  port: 5432
-});
-
-a.connect();
-
-a.query('select * from alumnos', (err, res) => {
-  console.log(err, res)
-  a.end()
-});
 */
 
 Meteor.startup(() => {
@@ -125,4 +110,60 @@ Meteor.startup(() => {
       docentes.insert(dat);
     });
   }
+  //console.log(querys.select('select * from alumnos limit 1'));
 });
+
+
+/* todo para postgres desde aqui */
+Meteor.methods({
+  getAlumnosPg(){
+    return querys.select('select * from alumnos limit 1');
+  }
+});
+
+querys = {
+  /* coneccion a postgres npm promised-postgres promesas incorporadas*/
+  select1 : function(query){
+    ourDbInstance = new Postgres('postgres://postgres:postgres@localhost:5432/jachasun');
+    var rollback;
+
+    const promiseREs = Promise.await( 
+      ourDbInstance.getNewClient()
+        .then( function ( client) {
+          rollback = client.roolback;
+          return client.begin()
+        })
+        .then(function(client){
+          return client.query(query);
+        })
+        .then(function(result){
+          //console.log(result);
+          return result;
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+    );
+    return promiseREs;
+  },
+
+  /* pg con promesas mas estable */
+  select :function(query){
+    const pool = new Pool({
+      connectionString : 'postgres://postgres:postgres@localhost:5432/jachasun'
+    });
+    return Promise.await(
+      pool.connect()
+        .then(client => {
+          return client.query(query)
+          .then(res => {
+            client.release()
+            return res;
+          })
+          .catch(e => {
+            client.release()
+          });
+        })
+    );
+  }
+};

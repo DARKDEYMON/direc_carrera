@@ -7,10 +7,11 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th>Sigla</th>
-                      <th>Gestion</th>
-                      <th>Periodo</th>
-                      <th>Opciones</th>
+                        <th>Sigla</th>
+                        <th>Gestion</th>
+                        <th>Periodo</th>
+                        <th>Grupo</th>
+                        <th>Opciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -19,6 +20,7 @@
                             <td>{{ nombreSigla materia_id }}</td>
                             <td>{{ gestion }}</td>
                             <td>{{ periodo }}</td>
+                            <td>{{ grupo }}</td>
                             <td>
                                 {{> quickRemoveButton collection="designacionDct" _id=this._id class="btn btn-danger"}}
                             </td>
