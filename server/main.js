@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+
 Postgres = require('promised-postgres');
 const { Pool, Client } = require('pg')
 
@@ -117,7 +118,14 @@ Meteor.startup(() => {
 /* todo para postgres desde aqui */
 Meteor.methods({
   getAlumnosPg(){
-    return querys.select('select * from alumnos limit 1');
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
+  },
+  getAlumnosPgAlum(alum){
+    //console.log(alum);
+    alum = alum.replace(' ','%');
+    //console.log("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
+
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
   }
 });
 
@@ -127,9 +135,9 @@ querys = {
     ourDbInstance = new Postgres('postgres://postgres:postgres@localhost:5432/jachasun');
     var rollback;
 
-    const promiseREs = Promise.await( 
+    const promiseREs = Promise.await(
       ourDbInstance.getNewClient()
-        .then( function ( client) {
+        .then(function(client) {
           rollback = client.roolback;
           return client.begin()
         })

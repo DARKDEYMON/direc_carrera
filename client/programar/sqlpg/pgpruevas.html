@@ -1,5 +1,48 @@
 <template name="pgpruebas">
-    {{#each a in alumPg}}
-        {{ a.id_programa }}
-    {{/each}}
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <h2>Materias Asignadas</h2>
+                                
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                        <input type="text" placeholder="buscar" class="buscar">
+                    </tr>
+                    <tr>
+                        <th>RU</th>
+                        <th>Programa</th>
+                        <th>Nombres</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Opciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#if showSearch }}
+                        <h1>buscando</h1>
+                    {{else}}
+
+                        {{#each alumPg}}
+                            <tr>
+                                <td>{{ id_alumno }}</td>
+                                <td>{{ id_programa }}</td>
+                                <td>{{ nombres }}</td>
+                                <td>{{ paterno }}</td>
+                                <td>{{ materno }}</td>
+                                <td>
+                                    <button class="btn btn-primary myButton">Reprogramar</button>
+                                </td>
+                            </tr>
+                        {{ else }}
+                            <tr>
+                                <td colspan="4">Cargando</td>
+                            </tr>
+                        {{/each}}
+                    {{/if}}
+                  </tbody>
+                </table>
+        </div>
+        <div></div>
+    </div>       
 </template>
