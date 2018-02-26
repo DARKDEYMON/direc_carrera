@@ -122,6 +122,7 @@ Meteor.methods({
   },
   getAlumnosPgAlum(alum){
     //console.log(alum);
+    alum = alum.toUpperCase();
     alum = alum.replace(' ','%');
     //console.log("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
 

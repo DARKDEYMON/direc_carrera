@@ -2,46 +2,34 @@
     <div class="grid-sis">
         <div></div>
         <div>
-                <h2>Materias Asignadas</h2>
-                                
-                <table class="table table-bordered">
-                  <thead>
+            <h2>Materias Asignadas</h2>
+            <div class="tableed">                 
+                <div class="row">
+                    <input type="text" placeholder="buscar" class="buscar">
+                </div>
+                <div class="row">
+                    <div class="col-md-2">RU</div>
+                    <div class="col-md-2">Programa</div>
+                    <div class="col-md-2">Nombres</div>
+                    <div class="col-md-2">Paterno</div>
+                    <div class="col-md-2">Materno</div>
+                    <div class="col-md-2">Opciones</div>
+                </div>
+                {{#navybitsPagination data=alumPg}}
+                    <div class="col-md-2">{{ id_alumno }}</div>
+                    <div class="col-md-2">{{ id_programa }}</div>
+                    <div class="col-md-2">{{ nombres }}</div>
+                    <div class="col-md-2">{{ paterno }}</div>
+                    <div class="col-md-2">{{ materno }}</div>
+                    <div class="col-md-2">
+                    <button class="btn btn-primary myButton">Reprogramar</button>
+                    </div>         
+                {{ else }}
                     <tr>
-                        <input type="text" placeholder="buscar" class="buscar">
+                        <td colspan="4">Cargando</td>
                     </tr>
-                    <tr>
-                        <th>RU</th>
-                        <th>Programa</th>
-                        <th>Nombres</th>
-                        <th>Paterno</th>
-                        <th>Materno</th>
-                        <th>Opciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#if showSearch }}
-                        <h1>buscando</h1>
-                    {{else}}
-
-                        {{#each alumPg}}
-                            <tr>
-                                <td>{{ id_alumno }}</td>
-                                <td>{{ id_programa }}</td>
-                                <td>{{ nombres }}</td>
-                                <td>{{ paterno }}</td>
-                                <td>{{ materno }}</td>
-                                <td>
-                                    <button class="btn btn-primary myButton">Reprogramar</button>
-                                </td>
-                            </tr>
-                        {{ else }}
-                            <tr>
-                                <td colspan="4">Cargando</td>
-                            </tr>
-                        {{/each}}
-                    {{/if}}
-                  </tbody>
-                </table>
+                {{/navybitsPagination}}
+            </div>
         </div>
         <div></div>
     </div>       
