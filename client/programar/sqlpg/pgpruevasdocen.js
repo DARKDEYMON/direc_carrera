@@ -1,17 +1,17 @@
 
-Template.pgpruebas.onCreated(function(){
+Template.pgpruebasdocen.onCreated(function(){
     this.showSearch = new ReactiveVar( false );
     this.listAlum = new ReactiveVar([]);
     //console.log(this.dataSearch);
-    Meteor.call('getAlumnosPg', (error, result) => {
+    Meteor.call('getDocentes', (error, result) => {
             //console.log(result.rows);
          this.listAlum.set(result.rows);
          this.showSearch.set( false );
     });
 });
 
-Template.pgpruebas.helpers({
-    alumPg() {
+Template.pgpruebasdocen.helpers({
+    docenPg() {
         return Template.instance().listAlum.get();
     },
     showSearch : function(){
@@ -19,9 +19,9 @@ Template.pgpruebas.helpers({
     },
 });
 
-Template.pgpruebas.events({ 
+Template.pgpruebasdocen.events({ 
     'click .myButton': function(event, template) {
-        console.log(this);
+        console.log(this.id_alumno);
     },
     'keyup .buscar': function(event, template){
         dataSearch = event.target.value.trim();

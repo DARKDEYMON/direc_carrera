@@ -1,8 +1,8 @@
-<template name="pgpruebas">
+<template name="pgpruebasdocen">
     <div class="grid-sis">
         <div></div>
         <div>
-            <h2>Materias Asignadas</h2>
+            <h2>Alumnos</h2>
             <div class="tableed">                 
                 <div class="row">
                     <input type="text" placeholder="buscar" class="buscar">
@@ -15,7 +15,7 @@
                     <div class="col-md-2">Materno</div>
                     <div class="col-md-2">Opciones</div>
                 </div>
-                {{#navybitsPagination data=alumPg}}
+                {{#navybitsPagination data=docenPg}}
                     <div class="col-md-2">{{ id_alumno }}</div>
                     <div class="col-md-2">{{ id_programa }}</div>
                     <div class="col-md-2">{{ nombres }}</div>
