@@ -1,0 +1,47 @@
+<template name="lisdatuatf">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <h2>Alumnos</h2>
+                <div class="row">
+                        <div class="col-lg-6">
+                          <div class="input-group">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                            <!--<input type="text" class="form-control" placeholder="Search for...">-->
+                            {{> EasySearch.Input index=uatfdatIndex  attributes=atrrSearch }}
+                          </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+                               
+                <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                            {{#EasySearch.Each index=uatfdatIndex }}
+                                <tr>
+                                    <td>{{ nombres }}</td>
+                                    <td>{{ paterno }}</td>
+                                    <td>{{ materno }}</td>
+                                </tr>
+                            {{else}}
+                                <p class="alert alert-warning">No existen coinsidencias</p>
+                            {{/EasySearch.Each}}
+                        </tbody>
+                </table>
+                <nav aria-label="...">
+                    {{> EasySearch.Pagination index=uatfdatIndex maxPages=1000 }}
+                </nav>
+                
+        </div>
+        <div></div>
+    </div>
+</template>

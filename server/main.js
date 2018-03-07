@@ -111,7 +111,25 @@ Meteor.startup(() => {
       docentes.insert(dat);
     });
   }
-  //console.log(querys.select('select * from alumnos limit 1'));
+
+  /* prubas para migracion */
+  /*
+  if(uatfdat.find().count()===0){
+    res = querys.select('select * from uatf_datos limit 5000');
+    _.each(res.rows,function(datu){
+      console.log(datu.paterno);
+      uatfdat.insert({
+        id_ra : datu.id_ra,
+        paterno : datu.paterno,
+        materno : datu.materno,
+        nombres : datu.nombres,
+        id_sexo : datu.id_sexo
+      });
+    });
+  }
+  */
+  // hasta aqui
+
 });
 
 
@@ -133,6 +151,7 @@ Meteor.methods({
   }
 });
 
+/* querys a db postgres */
 querys = {
   /* coneccion a postgres npm promised-postgres promesas incorporadas*/
   select1 : function(query){
@@ -177,5 +196,78 @@ querys = {
           });
         })
     );
+  },
+  /* con otro server prueba de guardado */
+  insert :function(query){
+    const pool = new Pool({
+      connectionString : 'postgres://postgres:123456789@localhost:5431/pruebas'
+    });
+    return Promise.await(
+      pool.connect()
+        .then(client => {
+          return client.query(query)
+          .then(res => {
+            client.release()
+            return res;
+          })
+          .catch(e => {
+            client.release()
+          });
+        })
+    );
+  },
+  delete :function(query){
+    const pool = new Pool({
+      connectionString : 'postgres://postgres:123456789@localhost:5431/pruebas'
+    });
+    return Promise.await(
+      pool.connect()
+        .then(client => {
+          return client.query(query)
+          .then(res => {
+            client.release()
+            return res;
+          })
+          .catch(e => {
+            client.release()
+          });
+        })
+    );
   }
 };
+
+
+/* parte de seguridad para insecure desde aqui */
+progra.allow({ 
+  insert: function(userId, doc) {
+      //console.log(doc);
+      return true; 
+  }, 
+  update: function() { 
+      return true; 
+  }, 
+  remove: function(userId, doc) {
+      //console.log(doc);
+      querys.insert("delete from progra where _id='"+ doc._id +"'")
+      return true; 
+  } 
+});
+
+designacionDct.allow({
+  insert: function(userId, doc) {
+    //console.log(doc);
+    return true;
+  }, 
+  update: function() { 
+      return true;
+  }, 
+  remove: function() { 
+      return true;
+  } 
+});
+
+/* before mongo */
+progra.before.insert(function(userId, doc){
+  //console.log(doc);
+  querys.insert("insert into progra values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
+});
