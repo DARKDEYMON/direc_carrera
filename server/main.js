@@ -32,6 +32,27 @@ alumnopg.insert({
 }).save();
 */
 
+/* publicaciones  solo si se quita autopublish */
+Meteor.publish('designacionDct',function(){
+  return designacionDct.find({});
+});
+Meteor.publish('progra',function(){
+  return progra.find({});
+});
+Meteor.publish('materias',function(){
+  return materias.find({});
+});
+Meteor.publish('docentes',function(){
+  return docentes.find({});
+});
+Meteor.publish('alumno',function(){
+  return alumno.find({});
+});
+Meteor.publish('uatfdat',function(){
+  return uatfdat.find({});
+});
+
+/*starup de meteor */
 Meteor.startup(() => {
   // code to run on server at startup
 

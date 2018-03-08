@@ -11,3 +11,9 @@
 .tableed .col-md-2{
     border: 1px solid black;
 }
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

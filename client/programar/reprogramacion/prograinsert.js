@@ -1,5 +1,11 @@
 import { Template } from "meteor/templating";
 
+Template.programar.onCreated(function(){
+    var self = this;
+    self.autorun(function() { 
+        self.subscribe('materias'); 
+    });
+});
 
 Template.programar.helpers({
 

@@ -1,5 +1,12 @@
 
 
+Template.listalumnos.onCreated(function(){
+    var self = this;
+    self.autorun(function() { 
+        self.subscribe('alumno'); 
+    });
+});
+
 Template.listalumnos.helpers({
     /*
     alumnosQuery: function() {

@@ -1,4 +1,9 @@
 Template.reprogramar.onCreated(function(){
+    var self = this;
+    self.autorun(function(){ 
+        self.subscribe('materias');
+        self.subscribe('progra');
+    });
     this.showform = new ReactiveVar( false );
 });
 
@@ -25,7 +30,7 @@ Template.reprogramar.helpers({
         return c;
     },
     getOptions : function() {
-        var cursor = materias.find();
+        var cursor = materias.find({});
         //console.log(cursor);
         return cursor.map(function(doc){
             return {label: doc.sigla, value: doc._id};

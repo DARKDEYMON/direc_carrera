@@ -1,0 +1,12 @@
+.pagination > .current > a, 
+.pagination > .current > span, 
+.pagination > .current > a:hover, 
+.pagination > .active > span:hover, 
+.pagination > .current > a:focus,
+.pagination > .current > span:focus{
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}

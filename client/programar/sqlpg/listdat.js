@@ -1,5 +1,12 @@
 
 
+Template.lisdatuatf.onCreated(function(){
+    var self = this;
+    self.autorun(function() { 
+        self.subscribe('uatfdat'); 
+    });
+});
+
 Template.lisdatuatf.helpers({
     /*
     alumnosQuery: function() {

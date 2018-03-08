@@ -1,5 +1,13 @@
 
 
+Template.inserAsigDct.onCreated(function(){
+    var self = this;
+    self.autorun(function() { 
+        self.subscribe('materias'); 
+    });
+});
+
+
 Template.inserAsigDct.helpers({
     getMaterias: function() {
         var cursor = materias.find({});

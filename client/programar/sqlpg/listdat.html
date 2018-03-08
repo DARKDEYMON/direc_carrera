@@ -24,8 +24,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            </tr>
                             {{#EasySearch.Each index=uatfdatIndex }}
                                 <tr>
                                     <td>{{ nombres }}</td>
@@ -37,10 +35,9 @@
                             {{/EasySearch.Each}}
                         </tbody>
                 </table>
-                <nav aria-label="...">
-                    {{> EasySearch.Pagination index=uatfdatIndex maxPages=1000 }}
-                </nav>
                 
+                {{> EasySearch.Pagination index=uatfdatIndex maxPages=5 customRenderPagination='searchpagination' }}
+                  
         </div>
         <div></div>
     </div>
