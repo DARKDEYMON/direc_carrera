@@ -17,3 +17,19 @@
     align-items: center;
     justify-content: center;
 }
+
+
+
+tbody tr:hover{
+    background-color: rgba(224, 62, 156, 0.3);
+    /*color: #fff;
+    /*opacity: 0.2;*/
+}
+/*
+td:hover {
+    position: relative;
+    z-index: 3;
+    background-color: #e03e9c;
+    color: #fff;
+}
+*/

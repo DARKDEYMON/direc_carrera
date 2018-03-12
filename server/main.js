@@ -51,6 +51,17 @@ Meteor.publish('alumno',function(){
 Meteor.publish('uatfdat',function(){
   return uatfdat.find({});
 });
+//para paginar 
+Meteor.publish('uatfdatPage',function(pageNumber,nPerPage){
+  return uatfdat.find({},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage });
+});
+Meteor.publish('uatfdatPageSearch',function(pageNumber,nPerPage,search){
+  reg = new RegExp('/.*'+ search +'.*/');
+  console.log(pageNumber);
+  console.log(nPerPage);
+  console.log(search);
+  return uatfdat.find({nombres:/.*CARLA.*/},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage});
+});
 
 /*starup de meteor */
 Meteor.startup(() => {
@@ -280,10 +291,10 @@ designacionDct.allow({
     return true;
   }, 
   update: function() { 
-      return true;
+    return true;
   }, 
   remove: function() { 
-      return true;
+    return true;
   } 
 });
 
