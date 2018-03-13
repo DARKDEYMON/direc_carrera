@@ -77,6 +77,7 @@ designacionDctShema = new SimpleSchema({
             }
         },
         custom : function(){
+            //console.log('aqui');
             if(!(designacionDct.find({materia_id:modifi.materia_id,gestion:modifi.gestion,periodo:modifi.periodo,grupo:modifi.grupo}).count()===0))
                 return ('designado_grupo');
         }

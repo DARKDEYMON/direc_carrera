@@ -1,0 +1,30 @@
+<template name="kardex">
+    <div class="grid-sis">
+    <div></div>
+    <div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Sigla</th>
+                <th>Materia</th>
+                <th>Gestion</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each kardex }}
+                <tr>
+                    <td>{{ sigla }}</td>
+                    <td>{{ materia }}</td>
+                    <td>{{ id_gestion }}</td>
+                    <td>{{ nota }}</td>
+                </tr>
+            {{else}}
+                <p class="alert alert-warning">No existen coinsidencias</p>
+            {{/each}}
+        </tbody>
+    </table>
+    </div>
+    <div></div>
+    </div>
+</template>

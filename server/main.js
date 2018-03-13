@@ -51,17 +51,16 @@ Meteor.publish('alumno',function(){
 Meteor.publish('uatfdat',function(){
   return uatfdat.find({});
 });
-//para paginar 
+//para paginar --
 Meteor.publish('uatfdatPage',function(pageNumber,nPerPage){
   return uatfdat.find({},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage });
 });
 Meteor.publish('uatfdatPageSearch',function(pageNumber,nPerPage,search){
-  reg = new RegExp('/.*'+ search +'.*/');
-  console.log(pageNumber);
-  console.log(nPerPage);
-  console.log(search);
-  return uatfdat.find({nombres:/.*CARLA.*/},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage});
+  reg = new RegExp(search.toLocaleUpperCase());
+  // /.*CARLA.*/
+  return uatfdat.find({nombres:reg},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage});
 });
+//para paginar --
 
 /*starup de meteor */
 Meteor.startup(() => {
@@ -180,6 +179,26 @@ Meteor.methods({
   },
   getDocentes(){
     return querys.select("select * from docentes where id_programa='SIS' AND estado='A';");
+  },
+  getKardex(){
+    add1 = "and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50";
+    return querys.select("SELECT notas.id_gestion, notas.id_periodo, uatf_datos.nro_dip, \
+      uatf_datos.paterno, uatf_datos.materno, uatf_datos.nombres, \
+      alumnos.id_programa, pln_materias.sigla, pln_materias.materia,alumnos.id_alumno, \
+      notas.nota, notas.nota_2da,notas.nota_ex_mesa, notas.observacion, \
+      alm_programas.programa,alm_programas_facultades.facultad, \
+      iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) as notafinal \
+    FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
+    WHERE   uatf_datos.id_ra = alumnos.id_ra \
+        AND alumnos.id_alumno = notas.id_alumno \
+        AND notas.id_materia = pln_materias.id_materia \
+        AND alumnos.id_programa = alm_programas.id_programa \
+        AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
+        AND alumnos.id_alumno='47128' \
+        AND pln_materias.sigla<>'PRE000' \
+        AND pln_materias.mostrarnotas<>false \
+          AND notas.observacion<>'C' \
+          AND notas.observacion<>'H'")
   }
 });
 
@@ -213,7 +232,8 @@ querys = {
   /* pg con promesas mas estable */
   select :function(query){
     const pool = new Pool({
-      connectionString : 'postgres://postgres:postgres@localhost:5432/jachasun'
+      /* aqui db ofi */
+      connectionString : 'postgres://postgres:postgres@localhost:5432/postgres'
     });
     return Promise.await(
       pool.connect()
