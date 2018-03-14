@@ -6,14 +6,14 @@ Template.alummore.onCreated(function(){
     //this.search="";
     self.autorun(function() {
         //console.log(self.more.get());
-        console.log('param1');
+        //console.log('param1');
         if(self.search.get()==''){
             self.subscribe('uatfdatPage',1,self.more.get());
-            console.log('param2');
+            //console.log('param2');
         }
         else{
             self.subscribe('uatfdatPageSearch',0,self.more.get(),self.search.get());
-            console.log('param3');
+            //console.log('param3');
         }
     });
 });
@@ -35,5 +35,8 @@ Template.alummore.events({
         //console.log(event.target.value.trim());
         Template.instance().search.set(search);
         Template.instance().more.set(10);
+    },
+    'click .thismore' : function(event, template){
+        console.log(this);
     }
 });

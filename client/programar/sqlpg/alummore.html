@@ -10,6 +10,7 @@
                         <th>Nombre</th>
                         <th>Paterno</th>
                         <th>Materno</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,9 +19,14 @@
                             <td>{{ nombres }}</td>
                             <td>{{ paterno }}</td>
                             <td>{{ materno }}</td>
+                            <td><button class="btn btn-primary thismore">Programar</button></td>
                         </tr>
                     {{else}}
-                        <p class="alert alert-warning">No existen coinsidencias</p>
+                        <tr>
+                            <td colspan="4">
+                                <p class="alert alert-warning">Cargando</p>
+                            </td>
+                        </tr>
                     {{/each}}
                 </tbody>
             </table> 

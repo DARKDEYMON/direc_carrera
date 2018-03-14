@@ -61,6 +61,8 @@ Meteor.publish('uatfdatPageSearch',function(pageNumber,nPerPage,search){
   return uatfdat.find({nombres:reg},{skip:pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0,limit : nPerPage});
 });
 //para paginar --
+// consulta join coleccion, columna q contiene el dato para join, nombre de la columna nueva para el join, nombre en array de los datos a mostrar
+// progra.join(materias,'materias_id','materia',['name']);
 
 /*starup de meteor */
 Meteor.startup(() => {
@@ -180,25 +182,29 @@ Meteor.methods({
   getDocentes(){
     return querys.select("select * from docentes where id_programa='SIS' AND estado='A';");
   },
-  getKardex(){
-    add1 = "and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50";
-    return querys.select("SELECT notas.id_gestion, notas.id_periodo, uatf_datos.nro_dip, \
-      uatf_datos.paterno, uatf_datos.materno, uatf_datos.nombres, \
-      alumnos.id_programa, pln_materias.sigla, pln_materias.materia,alumnos.id_alumno, \
-      notas.nota, notas.nota_2da,notas.nota_ex_mesa, notas.observacion, \
-      alm_programas.programa,alm_programas_facultades.facultad, \
-      iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) as notafinal \
-    FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
-    WHERE   uatf_datos.id_ra = alumnos.id_ra \
-        AND alumnos.id_alumno = notas.id_alumno \
-        AND notas.id_materia = pln_materias.id_materia \
-        AND alumnos.id_programa = alm_programas.id_programa \
-        AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
-        AND alumnos.id_alumno='47128' \
-        AND pln_materias.sigla<>'PRE000' \
-        AND pln_materias.mostrarnotas<>false \
-          AND notas.observacion<>'C' \
-          AND notas.observacion<>'H'")
+  getKardex(ru,apro){
+    add2 = " and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50";
+    add1 ="SELECT notas.id_gestion, notas.id_periodo, uatf_datos.nro_dip, \
+    uatf_datos.paterno, uatf_datos.materno, uatf_datos.nombres, \
+    alumnos.id_programa, pln_materias.sigla, pln_materias.materia,alumnos.id_alumno, \
+    notas.nota, notas.nota_2da,notas.nota_ex_mesa, notas.observacion, \
+    alm_programas.programa,alm_programas_facultades.facultad, \
+    iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) as notafinal \
+  FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
+  WHERE   uatf_datos.id_ra = alumnos.id_ra \
+      AND alumnos.id_alumno = notas.id_alumno \
+      AND notas.id_materia = pln_materias.id_materia \
+      AND alumnos.id_programa = alm_programas.id_programa \
+      AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
+      AND alumnos.id_alumno='"+ru+"' \
+      AND pln_materias.sigla<>'PRE000' \
+      AND pln_materias.mostrarnotas<>false \
+        AND notas.observacion<>'C' \
+        AND notas.observacion<>'H'"
+    if(apro)
+      return querys.select(add1)
+    else
+      return querys.select(add1 + add2)
   }
 });
 
@@ -290,7 +296,7 @@ querys = {
 
 
 /* parte de seguridad para insecure desde aqui */
-progra.allow({ 
+progra.allow({
   insert: function(userId, doc) {
       //console.log(doc);
       return true; 
@@ -310,10 +316,10 @@ designacionDct.allow({
     //console.log(doc);
     return true;
   }, 
-  update: function() { 
+  update: function() {
     return true;
   }, 
-  remove: function() { 
+  remove: function() {
     return true;
   } 
 });

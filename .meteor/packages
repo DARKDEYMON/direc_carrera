@@ -20,22 +20,23 @@ shell-server            # Server-side component of the `meteor shell` command
 #autopublish@1.0.7             # Publish all data to the clients (for prototyping)
 #insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
 
-underscore
-twbs:bootstrap
-aldeed:collection2
+underscore                     #tool
+twbs:bootstrap                 #desing framework
+aldeed:collection2             #add shemas
 #mios
-kadira:flow-router
-kadira:blaze-layout
-aldeed:autoform
-nilsdannemann:pdfmake
+kadira:flow-router             #routes
+kadira:blaze-layout            #blaze semi render
+aldeed:autoform                #generate forms
+nilsdannemann:pdfmake          #pdf
 
 #meteorsteam:meteor-postgres
 #austinrivas:postgresql
 #numtel:pg
 
-arillo:flow-router-helpers
-aldeed:delete-button
-easy:search
+arillo:flow-router-helpers      #routes render
+aldeed:delete-button            #delete
+easy:search                     #search opt
 navybits:pagination
 
 matb33:collection-hooks         #before and after for mongo
+perak:joins                     #joins

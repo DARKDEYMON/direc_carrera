@@ -2,22 +2,36 @@
     <div class="grid-sis">
     <div></div>
     <div>
+
+    <h2>Kardex</h2>
+    <p>The form below contains three radio buttons. The last option is disabled:</p>
+    <div id="radiobtn">
+        <input type="radio" name="myBut" value="A" checked="checked">Aprobadas
+        <input type="radio" name="myBut" value="T">Todo
+    </div>
+
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>Gestion</th>
                 <th>Sigla</th>
                 <th>Materia</th>
-                <th>Gestion</th>
-                <th>Nota</th>
+                
+                <th>Nota Final</th>
+                <th>Segundo Tr</th>
+                <th>Observacion</th>
             </tr>
         </thead>
         <tbody>
             {{#each kardex }}
-                <tr>
+                <tr class="{{ classRepro notafinal }}">
+                    <td>{{ id_gestion }}/{{ id_periodo }}</td>
                     <td>{{ sigla }}</td>
                     <td>{{ materia }}</td>
-                    <td>{{ id_gestion }}</td>
-                    <td>{{ nota }}</td>
+                   
+                    <td>{{ notafinal }}</td>
+                    <td>{{ nota_2da }}</td>
+                    <td>{{ resApro notafinal }}</td>
                 </tr>
             {{else}}
                 <p class="alert alert-warning">No existen coinsidencias</p>
