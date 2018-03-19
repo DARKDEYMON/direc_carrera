@@ -1,0 +1,52 @@
+<Template name="lisalumof">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <h2>Alumnos</h2>
+            <!-- recupera
+            <div class="form-group gest" data-required="true">     
+                <label class="control-label">Gestion</label>
+                <input type="text" class="form-control gestion" name ="gestion" value="2017"  placeholder="Gestion">
+                <label class="control-label">Periodo</label>
+                <input type="text" class="form-control periodo" name="periodo" value="1" placeholder="Periodo">
+            </div>
+             -->
+            <input type="text" class="form-control search"  placeholder="Buscar...">         
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ru</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each alum }}
+                        <tr>
+                            <td>{{ id_alumno }}</td>
+                            <td>{{ nombres }}</td>
+                            <td>{{ paterno }}</td>
+                            <td>{{ materno }}</td>
+                            <td>
+                                <!--<button class="btn btn-primary action">Programar</button>-->
+                                <a href="{{ pathFor 'programarof' id=id_alumno}}" class="btn btn-primary">Programar</a>
+                            </td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="4">
+                                <p class="alert alert-warning">Cargando</p>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table> 
+            <div class="center">
+                <button class="btn btn-primary dispmore">Ver mas</button>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

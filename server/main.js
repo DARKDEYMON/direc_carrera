@@ -168,6 +168,24 @@ Meteor.startup(() => {
 
 /* todo para postgres desde aqui */
 Meteor.methods({
+  /* !ofi */
+  getAlumnosPgLimit(limit){
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos \
+                          INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' limit "+limit)
+  },
+  getAlumnosPgLimitRu(ru,limit){
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN \
+                          alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' \
+                          and cast(id_alumno as TEXT) like '%"+ ru +"%' limit "+limit)
+  },
+
+  getMateriasProgra(ru,gestion,periodo){
+    return querys.select("select * from consola.generar_programacion_completa("+ru+","+gestion+","+periodo+",0)");
+  },
+  getMateriasReprogramacion(ru,gestion,periodo){
+    return querys.select("select * from consola.generar_programacion_completa_reprogramacion2("+ru+","+gestion+","+periodo+")");
+  },
+  /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
   },
@@ -190,17 +208,17 @@ Meteor.methods({
     notas.nota, notas.nota_2da,notas.nota_ex_mesa, notas.observacion, \
     alm_programas.programa,alm_programas_facultades.facultad, \
     iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) as notafinal \
-  FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
-  WHERE   uatf_datos.id_ra = alumnos.id_ra \
-      AND alumnos.id_alumno = notas.id_alumno \
-      AND notas.id_materia = pln_materias.id_materia \
-      AND alumnos.id_programa = alm_programas.id_programa \
-      AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
-      AND alumnos.id_alumno='"+ru+"' \
-      AND pln_materias.sigla<>'PRE000' \
-      AND pln_materias.mostrarnotas<>false \
-        AND notas.observacion<>'C' \
-        AND notas.observacion<>'H'"
+    FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
+    WHERE   uatf_datos.id_ra = alumnos.id_ra \
+        AND alumnos.id_alumno = notas.id_alumno \
+        AND notas.id_materia = pln_materias.id_materia \
+        AND alumnos.id_programa = alm_programas.id_programa \
+        AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
+        AND alumnos.id_alumno='"+ru+"' \
+        AND pln_materias.sigla<>'PRE000' \
+        AND pln_materias.mostrarnotas<>false \
+          AND notas.observacion<>'C' \
+          AND notas.observacion<>'H'"
     if(apro)
       return querys.select(add1)
     else
@@ -239,16 +257,16 @@ querys = {
   select :function(query){
     const pool = new Pool({
       /* aqui db ofi */
-      connectionString : 'postgres://postgres:postgres@localhost:5432/postgres'
+      connectionString : 'postgres://postgres:postgres@localhost:5432/jachasun'
     });
     return Promise.await(
       pool.connect()
         .then(client => {
           return client.query(query)
           .then(res => {
-            client.release()
+            client.release();
             return res;
-          })
+          })  
           .catch(e => {
             client.release()
           });
@@ -266,6 +284,7 @@ querys = {
           return client.query(query)
           .then(res => {
             client.release()
+            //console.log(res);
             return res;
           })
           .catch(e => {
@@ -301,13 +320,13 @@ progra.allow({
       //console.log(doc);
       return true; 
   }, 
-  update: function() { 
+  update: function() {
       return true; 
   }, 
   remove: function(userId, doc) {
       //console.log(doc);
       querys.insert("delete from progra where _id='"+ doc._id +"'")
-      return true; 
+      return true;
   } 
 });
 
@@ -327,5 +346,6 @@ designacionDct.allow({
 /* before mongo */
 progra.before.insert(function(userId, doc){
   //console.log(doc);
-  querys.insert("insert into progra values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
+  res = querys.insert("insert into progra values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
+  //console.log(res.rows);
 });

@@ -14,7 +14,7 @@ SimpleSchema.setDefaultMessages({
       es: {
         required: '{{label}} es requerido',
         designado : "La Materia ya esta designada",
-        designado_grupo : "El grupo ya esta Desiganado"
+        designado_grupo : "El grupo ya esta designado"
       },
     },
 });
@@ -85,4 +85,3 @@ designacionDctShema = new SimpleSchema({
 },{tracker : Tracker});
 
 designacionDct.attachSchema(designacionDctShema);
-

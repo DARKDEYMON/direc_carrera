@@ -1,0 +1,53 @@
+<Template name="programarofof">
+    <div class="grid-sis">
+        <div></div>
+        <div>			
+                <div class="container">
+                    <h2>Materias Programadas</h2>
+                                
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Materias</th>
+                          <th>Sigla</th>
+                          <th>Fecha de programacion</th>
+                          <th>Tipo de Programacion</th>
+                          <th>Reprogramar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            
+                          {{!-- 
+                            {{#each materiasProgra }}
+                                <tr>
+                                    <td>{{ nombreMateria materias_id }}</td>
+                                    <td>{{ nombreSigla materias_id }}</td>
+                                    <td>{{ dateInsert }}</td>
+                                    <th>{{ metodo_programacion }}</th>
+                                    <td>
+                                        {{> quickRemoveButton collection="progra" _id=this._id class="btn btn-danger"}}
+                                        <button class="btn btn-primary myButton">Reprogramar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    {{#if showform }}
+                                        <td colspan="5">
+                                            {{#autoForm collection="progra" id=this._id type="update" doc=this }}
+
+                                                {{> afQuickField name='alumno_id' type="hidden" }}
+                                                {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
+                                                {{> afQuickField name='materias_id' options=getOptions }}                                            
+                                                <button type="submit" class="btn btn-primary">Insert</button>
+                                            {{/autoForm}}
+                                        </td>
+                                    {{/if}}
+                                </tr>
+                            {{/each}}
+                            --}}
+                      </tbody>
+                    </table>
+                </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

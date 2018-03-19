@@ -1,0 +1,39 @@
+<Template name="programarof">
+    <div class="grid-sis">
+    <div></div>
+    <div>
+            
+                  
+        <h1>Gestion</h1>
+        <form class="form-group gest" data-required="true" method="">     
+            <div class="form-group" data-required="true">
+                <label class="control-label">Gestion</label>
+                <input type="text" required class="form-control gestion" name ="gestion" value="2017"  placeholder="Gestion">
+                <label class="control-label">Periodo</label>
+                <input type="text" required class="form-control periodo" name="periodo" value="1" placeholder="Periodo">
+            </div>
+            <button type="submit" class="btn btn-primary">Insert</button>
+        </form>
+
+        
+        {{#if gestionb }}
+            <h1>Programar</h1>
+            {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
+                {{#if afFieldIsInvalid name='alumno_id'}}
+                    <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
+                {{/if}}
+                {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
+                {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
+                
+                {{> afQuickField name='materias_id' options=getOptions }}
+                
+                <button type="submit" class="btn btn-primary">Insert</button>
+            {{/autoForm}}
+            
+            {{>programarofof}}
+        {{/if}}
+    </div>
+    <div></div>
+    </div>
+    
+</Template>
