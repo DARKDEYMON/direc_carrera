@@ -23,7 +23,7 @@ prograShema = new SimpleSchema({
     alumno_id :{
         type : String,
         label : "ID DE ALUMNO",
-        regEx: SimpleSchema.RegEx.Id,
+        //regEx: SimpleSchema.RegEx.Id, //esto momentaneo
         /*
         "regEx": [
             {msg: "Default Message"},
@@ -35,7 +35,7 @@ prograShema = new SimpleSchema({
     materias_id :{
         type : String,
         label : "MATERIAS",
-        regEx: SimpleSchema.RegEx.Id,
+        //regEx: SimpleSchema.RegEx.Id,
         optional: false,
         autoform : {
             firstOption : '(Seleccione una materia)',
@@ -44,7 +44,7 @@ prograShema = new SimpleSchema({
             //console.log(this.obj.$set);
             modifi = this.obj.$set || this.obj;
             //console.log(progra.find({materias_id:modifi.materias_id,alumno_id:modifi.alumno_id}).count());
-            if(!(progra.find({materias_id:modifi.materias_id,alumno_id:modifi.alumno_id}).count()===0))
+            if(!(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count()===0))
                 return "yaProgramado";
         }
     },
@@ -60,6 +60,39 @@ prograShema = new SimpleSchema({
         autoform: {
 			type:"hidden"
 		}
+    },
+    postgre_id : {
+        type : Number,
+        //unique : true,
+        label : "id de postgres",
+        optional : true
+    },
+    //aqui
+    gestion_id : {
+        type : Number,
+        label : "id de gestion",
+        optional : true
+    },
+    periodo_id : {
+        type : Number,
+        label : "id de periodo",
+        optional :true
+    },
+    id_grupo : {
+        type : Number,
+        label : "Grupo",
+        optional : false,
+        autoform :{
+            firstOption : '(Seleccione un grupo)',
+            /*
+            options : function(){
+                dat = [{val:1},{val:2}]
+                return _.map(dat,function(dat){
+                    return { label: dat.val , value: dat.val };
+                });
+            }
+            */
+        },
     },
     /*
     ult_usuario :{

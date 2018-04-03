@@ -169,6 +169,7 @@ Meteor.startup(() => {
 /* todo para postgres desde aqui */
 Meteor.methods({
   /* !ofi */
+  //los sis cambian en produccion
   getAlumnosPgLimit(limit){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos \
                           INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' limit "+limit)
@@ -178,12 +179,22 @@ Meteor.methods({
                           alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' \
                           and cast(id_alumno as TEXT) like '%"+ ru +"%' limit "+limit)
   },
-
+  //no en uso aun
   getMateriasProgra(ru,gestion,periodo){
     return querys.select("select * from consola.generar_programacion_completa("+ru+","+gestion+","+periodo+",0)");
   },
   getMateriasReprogramacion(ru,gestion,periodo){
     return querys.select("select * from consola.generar_programacion_completa_reprogramacion2("+ru+","+gestion+","+periodo+")");
+  },
+  getMateria(id){
+    return querys.select("select * from pln_materias where id_materia="+id);
+  },
+  getCertiValid(ru,clave){
+    return querys.select("SELECT * from consola.estudianteloginkey("+ru+",'"+clave+"')");
+  },
+  //verificar esto
+  getGruposMateria(idMateria,gestion,periodo){
+    return querys.select("SELECT count(*) as grupos FROM pln_materias m, dct_asignaciones a where m.id_materia=a.id_materia and m.id_materia="+ idMateria +" and id_gestion="+ gestion +" and id_periodo="+ periodo)
   },
   /* -ofi */
   getAlumnosPg(){
@@ -273,15 +284,14 @@ querys = {
         })
     );
   },
-  /* con otro server prueba de guardado */
   insert :function(query){
     const pool = new Pool({
-      connectionString : 'postgres://postgres:123456789@localhost:5431/pruebas'
+      connectionString : 'postgres://postgres:postgres@localhost:5432/jachasun'
     });
     return Promise.await(
       pool.connect()
         .then(client => {
-          return client.query(query)
+          return client.query(query+" RETURNING *")
           .then(res => {
             client.release()
             //console.log(res);
@@ -321,10 +331,11 @@ progra.allow({
       return true; 
   }, 
   update: function() {
-      return true; 
+      return true;
   }, 
   remove: function(userId, doc) {
       //console.log(doc);
+      /* borrar en la base de datos de postgres */
       querys.insert("delete from progra where _id='"+ doc._id +"'")
       return true;
   } 
@@ -344,8 +355,30 @@ designacionDct.allow({
 });
 
 /* before mongo */
-progra.before.insert(function(userId, doc){
-  //console.log(doc);
-  res = querys.insert("insert into progra values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
-  //console.log(res.rows);
+progra.after.insert(function(userId, doc){
+  
+  id=doc._id.toString();
+  //console.log(id);
+  //console.log(progra.find({_id:id}).fetch());
+
+  
+  var inser = "insert into academico.alm_programaciones ( \
+        id_alumno, \
+        id_materia, \
+        id_gestion, \
+        id_periodo, \
+        id_grupo, \
+        ult_usuario, \
+        estado, \
+        metodo_programacion) \
+          values("+ doc.alumno_id +","+ doc.materias_id +","+ doc.gestion_id +","+ doc.periodo_id +","+ doc.id_grupo +",'DIR','A','NORMAL')";
+  
+    
+  /* esta funsionara con el insert oficial añade id de postgres*/
+  res = querys.insert(inser);
+  //res = querys.insert("insert into progra(_id,alumno_id,metodo_programacion,materias_id,dateinsert) values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
+
+  id_po = Number(res.rows[0].id)
+  //console.log(id_po);
+  progra.update(id, {$set:{postgre_id: id_po }});
 });

@@ -10,19 +10,25 @@
                         <tr>
                           <th>Materias</th>
                           <th>Sigla</th>
+                          <th>Grupo</th>
                           <th>Fecha de programacion</th>
+                          <th>Gestion</th>
+                          <th>Periodo</th>
                           <th>Tipo de Programacion</th>
                           <th>Reprogramar</th>
                         </tr>
                       </thead>
                       <tbody>
                             
-                          {{!-- 
+                          
                             {{#each materiasProgra }}
                                 <tr>
                                     <td>{{ nombreMateria materias_id }}</td>
                                     <td>{{ nombreSigla materias_id }}</td>
-                                    <td>{{ dateInsert }}</td>
+                                    <td>{{ id_grupo }}</td>
+                                    <td>{{ dateFormat dateInsert }}</td>
+                                    <td>{{ gestion_id }}</td>
+                                    <td>{{ periodo_id }}</td>
                                     <th>{{ metodo_programacion }}</th>
                                     <td>
                                         {{> quickRemoveButton collection="progra" _id=this._id class="btn btn-danger"}}
@@ -31,7 +37,7 @@
                                 </tr>
                                 <tr>
                                     {{#if showform }}
-                                        <td colspan="5">
+                                        <td colspan="8">
                                             {{#autoForm collection="progra" id=this._id type="update" doc=this }}
 
                                                 {{> afQuickField name='alumno_id' type="hidden" }}
@@ -43,7 +49,7 @@
                                     {{/if}}
                                 </tr>
                             {{/each}}
-                            --}}
+                            
                       </tbody>
                     </table>
                 </div>

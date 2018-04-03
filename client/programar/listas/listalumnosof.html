@@ -11,7 +11,7 @@
                 <input type="text" class="form-control periodo" name="periodo" value="1" placeholder="Periodo">
             </div>
              -->
-            <input type="text" class="form-control search"  placeholder="Buscar...">         
+            <input type="text" class="form-control search"  placeholder="Buscar por Ru...">         
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -32,11 +32,12 @@
                             <td>
                                 <!--<button class="btn btn-primary action">Programar</button>-->
                                 <a href="{{ pathFor 'programarof' id=id_alumno}}" class="btn btn-primary">Programar</a>
+                                <a href="{{ pathFor 'kardex' ru=id_alumno}}" class="btn btn-primary">Kardex</a>
                             </td>
                         </tr>
                     {{else}}
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5  ">
                                 <p class="alert alert-warning">Cargando</p>
                             </td>
                         </tr>

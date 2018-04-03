@@ -6,5 +6,7 @@ Template.registerHelper('idTipoProgramacion',function(){
         //console.log(dir);
         if(dir == "reprogramacion")
             return "REPROGRAMACION";
+        if(dir == "programarof")
+            return "REPROGRAMACION"
         return "DESCONOSIDO";
 });

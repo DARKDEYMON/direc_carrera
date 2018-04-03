@@ -53,6 +53,7 @@ designacionDctShema = new SimpleSchema({
             return new Date().getFullYear();
         }
     },
+    /* emulado */
     periodo : {
         type : Number,
         label : "Periodo",
