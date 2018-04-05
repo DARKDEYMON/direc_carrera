@@ -34,7 +34,11 @@
                     <td>{{ resApro notafinal }}</td>
                 </tr>
             {{else}}
-                <p class="alert alert-warning">No existen coinsidencias</p>
+                <tr>
+                    <td colspan="6">
+                        <p class="alert alert-warning">No existen coinsidencias</p>
+                    </td>
+                </tr>
             {{/each}}
         </tbody>
     </table>

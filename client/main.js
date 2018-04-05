@@ -8,5 +8,7 @@ Template.registerHelper('idTipoProgramacion',function(){
             return "REPROGRAMACION";
         if(dir == "programarof")
             return "REPROGRAMACION"
+        if(dir =="programarespecial")
+            return "ESPECIAL"
         return "DESCONOSIDO";
 });

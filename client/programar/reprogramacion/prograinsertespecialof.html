@@ -1,0 +1,36 @@
+
+<template name="programarespecial" >
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <form class="form-group gest" data-required="true" method="">     
+                        <div class="form-group" data-required="true">
+                            <label class="control-label">Gestion</label>
+                            <input type="text" required class="form-control gestion" name ="gestion" value="{{ getInitYear }}" autocomplete="off"  placeholder="Gestion">
+                            <label class="control-label">Periodo</label>
+                            <input type="text" required class="form-control periodo" name="periodo" value="1" autocomplete="off" placeholder="Periodo">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Insert</button>
+                    </form>
+                
+                {{#if gestionChange}}
+                    <h1>Nueva programacion</h1>
+                    {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
+                        {{#if afFieldIsInvalid name='alumno_id'}}
+                            <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
+                        {{/if}}
+                        {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
+                        {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
+                        
+                        {{> afQuickField name='materias_id' options=getOptions }}
+                        {{> afQuickField name='id_grupo' options=getOptionGroups }}
+                        
+                        <button type="submit" class="btn btn-primary">Insert</button>
+                    {{/autoForm}}
+                    
+                    {{> reproprogramarespecialof }}
+                {{/if}}
+        </div>
+        <div></div>
+    </div>
+</template>

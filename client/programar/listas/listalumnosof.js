@@ -45,6 +45,10 @@ Template.lisalumof.events({
     'click .action' : function(event, template){
         console.log(this);
     },
+    'click #reporte' : function(event, template){
+        var valor = event.target.attributes.getNamedItem("value").value;
+        window.open("http://localhost:8080/pentaho/api/repos/:public:Steel%20Wheels:notas.prpt/generatedContent?Ru="+valor+"&output-target=pageable/pdf&userid=admin&password=password")
+    }
     /*
     'keyup .gest' : function(event, template){
         gestion="2017";

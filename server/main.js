@@ -175,6 +175,11 @@ Meteor.methods({
                           INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' limit "+limit)
   },
   getAlumnosPgLimitRu(ru,limit){
+    /*
+    select DISTINCT on (u.id_ra) * from uatf_datos u INNER JOIN 
+    alumnos ON (alumnos.id_ra = u.id_ra)  where id_programa='SIS' 
+    and concat(u.nombres||' '||u.paterno||' '||u.materno) like '%REYNALDO%PEREIRA%HEREDIA%'
+    */
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN \
                           alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' \
                           and cast(id_alumno as TEXT) like '%"+ ru +"%' limit "+limit)
@@ -196,20 +201,10 @@ Meteor.methods({
   getGruposMateria(idMateria,gestion,periodo){
     return querys.select("SELECT count(*) as grupos FROM pln_materias m, dct_asignaciones a where m.id_materia=a.id_materia and m.id_materia="+ idMateria +" and id_gestion="+ gestion +" and id_periodo="+ periodo)
   },
-  /* -ofi */
-  getAlumnosPg(){
-    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
-  },
-  getAlumnosPgAlum(alum){
-    //console.log(alum);
-    alum = alum.toUpperCase();
-    alum = alum.replace(' ','%');
-    //console.log("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
-
-    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
-  },
-  getDocentes(){
-    return querys.select("select * from docentes where id_programa='SIS' AND estado='A';");
+  //no en uso aun
+  getMateriasFaltantes(malla,ru){
+    return querys.select("select * from consola._grafica_materias("+ malla +",'SIS') \
+                             where r_id_materia not in(select r_id_materia from consola._grafica_materias_estado_completo("+ ru +","+ malla +",'SIS'))")
   },
   getKardex(ru,apro){
     add2 = " and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50";
@@ -234,7 +229,22 @@ Meteor.methods({
       return querys.select(add1)
     else
       return querys.select(add1 + add2)
-  }
+  },
+  /* -ofi */
+  getAlumnosPg(){
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
+  },
+  getAlumnosPgAlum(alum){
+    //console.log(alum);
+    alum = alum.toUpperCase();
+    alum = alum.replace(' ','%');
+    //console.log("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
+
+    return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
+  },
+  getDocentes(){
+    return querys.select("select * from docentes where id_programa='SIS' AND estado='A';");
+  },
 });
 
 /* querys a db postgres */
@@ -336,7 +346,7 @@ progra.allow({
   remove: function(userId, doc) {
       //console.log(doc);
       /* borrar en la base de datos de postgres */
-      querys.insert("delete from progra where _id='"+ doc._id +"'")
+      querys.insert("delete from academico.alm_programaciones where id='"+ doc.postgre_id +"'")
       return true;
   } 
 });
@@ -360,7 +370,6 @@ progra.after.insert(function(userId, doc){
   id=doc._id.toString();
   //console.log(id);
   //console.log(progra.find({_id:id}).fetch());
-
   
   var inser = "insert into academico.alm_programaciones ( \
         id_alumno, \
@@ -371,7 +380,7 @@ progra.after.insert(function(userId, doc){
         ult_usuario, \
         estado, \
         metodo_programacion) \
-          values("+ doc.alumno_id +","+ doc.materias_id +","+ doc.gestion_id +","+ doc.periodo_id +","+ doc.id_grupo +",'DIR','A','NORMAL')";
+          values("+ doc.alumno_id +","+ doc.materias_id +","+ doc.gestion_id +","+ doc.periodo_id +","+ doc.id_grupo +",'DIR','A','"+ doc.metodo_programacion +"')";
   
     
   /* esta funsionara con el insert oficial añade id de postgres*/

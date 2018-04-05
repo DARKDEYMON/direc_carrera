@@ -30,9 +30,23 @@
                             <td>{{ paterno }}</td>
                             <td>{{ materno }}</td>
                             <td>
-                                <!--<button class="btn btn-primary action">Programar</button>-->
-                                <a href="{{ pathFor 'programarof' id=id_alumno}}" class="btn btn-primary">Programar</a>
-                                <a href="{{ pathFor 'kardex' ru=id_alumno}}" class="btn btn-primary">Kardex</a>
+                                <div class="btn-group"> 
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reprogramacion <span class="caret"></span></button> 
+                                    <ul class="dropdown-menu"> 
+                                        <li><a href="{{ pathFor 'programarof' id=id_alumno}}" >Programar</a></li> 
+                                        <li><a href="{{ pathFor 'programarespecial' id=id_alumno }}" >P. Especial</a></li>
+                                    </ul> 
+                                </div>
+                                <div class="btn-group"> 
+                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kardex <span class="caret"></span></button> 
+                                    <ul class="dropdown-menu"> 
+                                        <li><a href="{{ pathFor 'kardex' ru=id_alumno}}">Kardex</a></li>
+                                        <li><a id="reporte" href="" value="{{ id_alumno }}">Reporte</a></li>
+                                        <!--<li><a href="{{ pathFor 'programarespecial' id=id_alumno }}" >P. Especial</a></li>-->
+                                   </ul> 
+                                </div>
+                                
+                                
                             </td>
                         </tr>
                     {{else}}

@@ -1,6 +1,5 @@
-import { Promise } from 'meteor/promise';
 
-Template.programarofof.onCreated(function(){
+Template.reproprogramarespecialof.onCreated(function(){
     this.showform = new ReactiveVar(false);
     this.resultReProgra = new ReactiveVar([]);
     this.gestiont = new ReactiveVar();
@@ -26,7 +25,7 @@ Template.programarofof.onCreated(function(){
     });
 });
 
-Template.programarofof.helpers({
+Template.reproprogramarespecialof.helpers({
     dateFormat : function(date) {
         return moment(date).format('MM-DD-YYYY');
     },
@@ -90,7 +89,7 @@ Template.programarofof.helpers({
     },
 });
 
-Template.programarofof.events({ 
+Template.reproprogramarespecialof.events({ 
     'click .myButton' : function(event, template) {
         if(Template.instance().showform.get()){
             template.showform.set(false);

@@ -5,12 +5,14 @@ Template.programarof.onCreated(function(){
     this.gestion = new ReactiveVar('2018');
     this.periodo = new ReactiveVar('1');
     this.certf = new ReactiveVar('');
+    
     this.certfValid = new ReactiveVar(undefined);
-
+    console.log("aqui");
     this.cantGroup = new ReactiveVar(0);
 
     id = FlowRouter.getParam('id');
     var self = this;
+
     self.autorun(function() {
         self.subscribe('materias');
         self.subscribe('progra');
@@ -22,7 +24,9 @@ Template.programarof.onCreated(function(){
             //console.log(id+" "+self.certf.get())
             Meteor.call('getCertiValid',id ,self.certf.get(), (error, result)=>{
                 //console.log(result.rows[0].estudianteloginkey);
-                return self.certfValid.set(result.rows[0].estudianteloginkey);  
+                return self.certfValid.set(true)
+                /*poner esta en produccion */
+                //return self.certfValid.set(result.rows[0].estudianteloginkey);  
             });
         }
     });
@@ -58,11 +62,11 @@ Template.programarof.helpers({
         /* errores verificar */
         var res = Template.instance().certfValid.get();
         var res1 = Template.instance().gestionb.get();
-        //console.log(res===undefined);
+        //console.log(res);
         if(res===undefined)
             return true && res1;
         /* retornar res en produccion enves de true  */
-        return true && res1;
+        return res && res1;
     },
     getOptionGroups(){
         res = Template.instance().cantGroup.get();
@@ -80,7 +84,7 @@ Template.programarof.helpers({
 Template.programarof.events({
     'submit .gest' : function(event, template){
         event.preventDefault();
-        event.stopPropagation(); 
+        event.stopPropagation();
 
         Template.instance().gestionb.set(true);
         gestion = event.target.gestion.value.trim();
@@ -93,9 +97,12 @@ Template.programarof.events({
 
         certf = event.target.certf.value.trim();
         Template.instance().certf.set(certf);
-        
-        console.log("HABER")
+
         return false;
+    },
+    /* solo al cambiar el form actualizar */
+    'change .gest' : function(event, template){
+        Template.instance().certfValid.set(false);
     },
     'change #insertProgramarForm33 select[name="materias_id"]':function(event, template){
         /*evento de cambio*/
@@ -105,7 +112,7 @@ Template.programarof.events({
         var asig = Template.instance().cantGroup;
         
         var res = Meteor.call('getGruposMateria', matid, ges, peri, (error, result)=>{
-            console.log(result.rows[0].grupos);
+            //console.log(result.rows[0].grupos);
             asig.set(result.rows[0].grupos);
         });
 
