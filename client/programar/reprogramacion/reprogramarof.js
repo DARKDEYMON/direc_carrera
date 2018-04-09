@@ -1,4 +1,5 @@
 import { Promise } from 'meteor/promise';
+import { ReactiveMethod} from 'meteor/simple:reactive-method';
 
 Template.programarofof.onCreated(function(){
     this.showform = new ReactiveVar(false);
@@ -8,13 +9,14 @@ Template.programarofof.onCreated(function(){
     self = this;
     id = FlowRouter.getParam('id');
 
+    //console.log("re");
     /* arreder a instancia superior */
     this.superior = this.view.parentView.parentView.templateInstance();
     this.gestiont.set(this.superior.gestion.get())
     this.periodot.set(this.superior.periodo.get())
     //
     
-    console.log("reactivo funsiona");
+    //console.log("reactivo funsiona");
 
     self.autorun(function(){
         self.subscribe('materias');
@@ -32,10 +34,10 @@ Template.programarofof.helpers({
     },
     /* cambio de nombre de foranes */
     nombreMateria : function(id){
-
-        res = ReactiveMethod.call('getMateria',id).rows[0].materia;
+        console.log(id);
+        return ReactiveMethod.call('getMateria',id).rows[0].materia;
         //console.log(res);
-        return res
+        //return res
         
         /*
         resu = await( new Promise((resolve, reject) => {
@@ -51,9 +53,8 @@ Template.programarofof.helpers({
         
     },
     nombreSigla : function(id){
-        res = ReactiveMethod.call('getMateria',id).rows[0].sigla;
-        //console.log(res);
-        return res
+        console.log(id);
+        return ReactiveMethod.call('getMateria',id).rows[0].sigla;
     },
 
     /* materiasd q tiene programadas */
@@ -64,7 +65,7 @@ Template.programarofof.helpers({
         var per = Number(Template.instance().periodot.get());
         //console.log(id+" "+ges+" "+per);
         
-        res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per});
+        res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:{$ne:"ESPECIAL"}});
         //console.log(res)
 
         //res = progra.find({alumno_id: id ,dateInsert: {$gte: new Date(ges, 1, 1), $lt: new Date(ges, 12, 31)} });

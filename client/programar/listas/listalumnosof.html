@@ -41,7 +41,10 @@
                                     <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kardex <span class="caret"></span></button> 
                                     <ul class="dropdown-menu"> 
                                         <li><a href="{{ pathFor 'kardex' ru=id_alumno}}">Kardex</a></li>
-                                        <li><a id="reporte" href="" value="{{ id_alumno }}">Reporte</a></li>
+                                        <li><a id="kardex" href="" value="{{ id_alumno }}">Kardex Pdf</a></li>
+                                        <li><a href="{{ pathFor 'pensun' ru=id_alumno }}">Pensun</a></li>
+                                        <li><a id="pensun" href="" value="{{ id_alumno }}">Pensun Pdf</a></li>
+                                        <li><a href="{{ pathFor 'ranking' ru=id_alumno }}">Ranking</a></li>
                                         <!--<li><a href="{{ pathFor 'programarespecial' id=id_alumno }}" >P. Especial</a></li>-->
                                    </ul> 
                                 </div>

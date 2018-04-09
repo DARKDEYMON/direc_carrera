@@ -50,8 +50,9 @@
             {{/autoForm}}
             
             {{> programarofof }}
-        {{else}}
-            <!--<p>La clave de certificado es invalida</p>-->
+        {{/if}}
+        {{#if getCertInvalidMessage}}
+            <p>Certificado erroneo</p>
         {{/if}}
     </div>
     <div></div>

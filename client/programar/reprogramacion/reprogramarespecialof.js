@@ -11,15 +11,11 @@ Template.reproprogramarespecialof.onCreated(function(){
     this.superior = this.view.parentView.parentView.templateInstance();
     this.gestiont.set(this.superior.gestion.get())
     this.periodot.set(this.superior.periodo.get())
-    //
-    
-    console.log("reactivo funsiona");
 
     self.autorun(function(){
         self.subscribe('materias');
         self.subscribe('progra');
         Meteor.call('getMateriasReprogramacion',id ,self.superior.gestion.get() ,self.superior.periodo.get() ,(error, result)=>{
-            //console.log(result.rows);
             self.resultReProgra.set(result.rows);
         });
     });
@@ -31,28 +27,15 @@ Template.reproprogramarespecialof.helpers({
     },
     /* cambio de nombre de foranes */
     nombreMateria : function(id){
-
-        res = ReactiveMethod.call('getMateria',id).rows[0].materia;
-        //console.log(res);
-        return res
-        
-        /*
-        resu = await( new Promise((resolve, reject) => {
-            Meteor.call('getMateria',id, (error, result) => {
-              if (error) reject(error);
-              resolve(result.rows[0].materia);
-            });
-          })
-        )
-        console.log(resu);
-        return resu;
-        */
-        
+        //console.log(id);
+        return ReactiveMethod.call('getMateria',id).rows[0].materia;
+        //return res
     },
     nombreSigla : function(id){
-        res = ReactiveMethod.call('getMateria',id).rows[0].sigla;
+        //console.log(id);
+        return ReactiveMethod.call('getMateria',id).rows[0].sigla;
         //console.log(res);
-        return res
+        //return res
     },
 
     /* materiasd q tiene programadas */
@@ -63,7 +46,7 @@ Template.reproprogramarespecialof.helpers({
         var per = Number(Template.instance().periodot.get());
         //console.log(id+" "+ges+" "+per);
         
-        res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per});
+        res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:"ESPECIAL"});
         //console.log(res)
 
         //res = progra.find({alumno_id: id ,dateInsert: {$gte: new Date(ges, 1, 1), $lt: new Date(ges, 12, 31)} });

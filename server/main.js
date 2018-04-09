@@ -192,6 +192,7 @@ Meteor.methods({
     return querys.select("select * from consola.generar_programacion_completa_reprogramacion2("+ru+","+gestion+","+periodo+")");
   },
   getMateria(id){
+    console.log("Aqui el id"+id);
     return querys.select("select * from pln_materias where id_materia="+id);
   },
   getCertiValid(ru,clave){
@@ -201,7 +202,6 @@ Meteor.methods({
   getGruposMateria(idMateria,gestion,periodo){
     return querys.select("SELECT count(*) as grupos FROM pln_materias m, dct_asignaciones a where m.id_materia=a.id_materia and m.id_materia="+ idMateria +" and id_gestion="+ gestion +" and id_periodo="+ periodo)
   },
-  //no en uso aun
   getMateriasFaltantes(malla,ru){
     return querys.select("select * from consola._grafica_materias("+ malla +",'SIS') \
                              where r_id_materia not in(select r_id_materia from consola._grafica_materias_estado_completo("+ ru +","+ malla +",'SIS'))")
@@ -230,6 +230,37 @@ Meteor.methods({
     else
       return querys.select(add1 + add2)
   },
+  getPensun(ru){
+    return querys.select("SELECT pln_materias.nivel_academico ,notas.id_gestion, notas.id_periodo, uatf_datos.nro_dip, \
+    uatf_datos.paterno, uatf_datos.materno, uatf_datos.nombres, \
+    alumnos.id_programa, pln_materias.sigla, pln_materias.materia,alumnos.id_alumno, \
+    notas.nota, notas.nota_2da,notas.nota_ex_mesa, notas.observacion, \
+    alm_programas.programa,alm_programas_facultades.facultad, \
+    iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) as notafinal \
+    FROM uatf_datos,alumnos,notas,pln_materias,alm_programas,alm_programas_facultades \
+    WHERE   uatf_datos.id_ra = alumnos.id_ra \
+        AND alumnos.id_alumno = notas.id_alumno \
+        AND notas.id_materia = pln_materias.id_materia \
+        AND alumnos.id_programa = alm_programas.id_programa \
+        AND alm_programas.id_facultad = alm_programas_facultades.id_facultad \
+        AND alumnos.id_alumno='"+ ru +"'\
+        AND pln_materias.sigla<>'PRE000' \
+        AND pln_materias.mostrarnotas<>false \
+          AND notas.observacion<>'C' \
+          AND notas.observacion<>'H' and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50 order by pln_materias.nivel_academico")
+  },
+  getRanking(ru){
+    return querys.select("select n.id_materia,m.sigla,m.materia,n.nota,n.nota_2da,n.id_gestion,n.id_periodo,consola._materia_ranking("+ru+",n.id_materia,n.id_gestion,n.id_periodo) from notas_planilla n \
+                            left join pln_materias m \
+                              on m.id_materia=n.id_materia \
+                          where n.id_alumno="+ru+" and (n.nota>=51 or n.nota_2da>=51) and m.sigla<>'PRE000' \
+                          order by n.id_gestion,n.id_periodo");
+  },
+  //aun sin uso
+  getCanPlanes(){
+    return querys.select("select * from consola.director_planes_cantidades('SIS');");
+  },
+
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
@@ -346,7 +377,7 @@ progra.allow({
   remove: function(userId, doc) {
       //console.log(doc);
       /* borrar en la base de datos de postgres */
-      querys.insert("delete from academico.alm_programaciones where id='"+ doc.postgre_id +"'")
+      querys.insert("delete from academico.alm_programaciones where id="+ doc.postgre_id);
       return true;
   } 
 });
@@ -382,12 +413,17 @@ progra.after.insert(function(userId, doc){
         metodo_programacion) \
           values("+ doc.alumno_id +","+ doc.materias_id +","+ doc.gestion_id +","+ doc.periodo_id +","+ doc.id_grupo +",'DIR','A','"+ doc.metodo_programacion +"')";
   
-    
+  //console.log(inser);
   /* esta funsionara con el insert oficial añade id de postgres*/
   res = querys.insert(inser);
   //res = querys.insert("insert into progra(_id,alumno_id,metodo_programacion,materias_id,dateinsert) values('"+ doc._id +"','"+ doc.alumno_id +"','"+ doc.metodo_programacion +"','"+ doc.materias_id +"','"+ doc.dateInsert +"')");
-
+  //console.log(res)
   id_po = Number(res.rows[0].id)
-  //console.log(id_po);
-  progra.update(id, {$set:{postgre_id: id_po }});
+  
+  /*modificacion de prueva */
+  // progra.update(id, {$set:{postgre_id: id_po }});
+
+  mat = querys.select("select * from pln_materias where id_materia="+res.rows[0].id_materia);
+
+  progra.update(id, {$set:{postgre_id: id_po, materia_aux: mat.rows[0].materia ,sigla_aux: mat.rows[0].sigla}});
 });

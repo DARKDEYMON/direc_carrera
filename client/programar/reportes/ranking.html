@@ -1,0 +1,42 @@
+<template name="ranking">
+    <div class="grid-sis">
+    <div></div>
+    <div>
+
+    <h2>Ranking</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Sigla</th>
+                <th>Materia</th>  
+                <th>Gestion/Periodo</th>
+
+                <th>Nota Final</th>
+                <th>Segundo Tr</th>
+                <th>Ranking</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each ranking }}
+                <tr>
+                    <td>{{ sigla }}</td>
+                    <td>{{ materia }}</td>
+                    <td>{{ id_gestion }}/{{ id_periodo }}</td>
+                   
+                    <td>{{ nota }}</td>
+                    <td>{{ nota_2da }}</td>
+                    <td>{{ _materia_ranking }}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="6">
+                        <p class="alert alert-warning">No existen coinsidencias</p>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    </div>
+    <div></div>
+    </div>
+</template>

@@ -43,7 +43,7 @@ prograShema = new SimpleSchema({
         custom : function(){
             //console.log(this.obj.$set);
             modifi = this.obj.$set || this.obj;
-            //console.log(progra.find({materias_id:modifi.materias_id,alumno_id:modifi.alumno_id}).count());
+            //console.log(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count());
             if(!(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count()===0))
                 return "yaProgramado";
         }
@@ -93,6 +93,16 @@ prograShema = new SimpleSchema({
             }
             */
         },
+    },
+    materia_aux : {
+        type : String,
+        label : 'Materia',
+        optional : true
+    },
+    sigla_aux : {
+        type : String,
+        label : 'Sigla',
+        optional :true
     },
     /*
     ult_usuario :{

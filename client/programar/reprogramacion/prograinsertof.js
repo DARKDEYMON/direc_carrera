@@ -7,7 +7,7 @@ Template.programarof.onCreated(function(){
     this.certf = new ReactiveVar('');
     
     this.certfValid = new ReactiveVar(undefined);
-    console.log("aqui");
+    //console.log("aqui");
     this.cantGroup = new ReactiveVar(0);
 
     id = FlowRouter.getParam('id');
@@ -67,6 +67,13 @@ Template.programarof.helpers({
             return true && res1;
         /* retornar res en produccion enves de true  */
         return res && res1;
+    },
+    getCertInvalidMessage: function(){
+        /*ver q pasa */
+        var res = Template.instance().certfValid.get();
+        if(res==undefined)
+            return false;
+        return !res;
     },
     getOptionGroups(){
         res = Template.instance().cantGroup.get();

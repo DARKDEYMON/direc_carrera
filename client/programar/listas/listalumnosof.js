@@ -45,22 +45,12 @@ Template.lisalumof.events({
     'click .action' : function(event, template){
         console.log(this);
     },
-    'click #reporte' : function(event, template){
+    'click #kardex' : function(event, template){
         var valor = event.target.attributes.getNamedItem("value").value;
-        window.open("http://localhost:8080/pentaho/api/repos/:public:Steel%20Wheels:notas.prpt/generatedContent?Ru="+valor+"&output-target=pageable/pdf&userid=admin&password=password")
-    }
-    /*
-    'keyup .gest' : function(event, template){
-        gestion="2017";
-        periodo="1";
-        if(event.target.name=='gestion'){
-            gestion = event.target.value.trim();
-            console.log(event.target.value.trim());
-        }
-        if(event.target.name=='periodo'){
-            periodo = event.target.value.trim();
-            console.log(event.target.value.trim());
-        }
+        window.open("http://10.10.165.134:8080/pentaho/api/repos/:public:Steel%20Wheels:notas2.prpt/generatedContent?Ru="+valor+"&output-target=pageable/pdf&userid=admin&password=password")
     },
-    */
+    'click #pensun' : function(event, template){
+        var valor = event.target.attributes.getNamedItem("value").value;
+        window.open("http://10.10.165.134:8080/pentaho/api/repos/:public:Steel%20Wheels:pensun.prpt/generatedContent?Ru="+valor+"&output-target=pageable/pdf&userid=admin&password=password")
+    }
 });

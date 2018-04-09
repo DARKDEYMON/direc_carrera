@@ -20,7 +20,12 @@ Template.programarespecial.onCreated(function(){
 });
 
 Template.programarespecial.helpers({
-
+    gestion:  function(){
+        return Template.instance().gestion.get();
+    },
+    periodo: function(){
+        return Template.instance().periodo.get();
+    },
     idAlumno: function(){
         return FlowRouter.getParam('id');
     },
@@ -54,7 +59,6 @@ Template.programarespecial.events({
 
         gestion = event.target.gestion.value.trim();
         Template.instance().gestion.set(gestion);
-        //console.log(gestion);
         
         periodo = event.target.periodo.value.trim();
         Template.instance().periodo.set(periodo);
