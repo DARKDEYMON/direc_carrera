@@ -192,7 +192,7 @@ Meteor.methods({
     return querys.select("select * from consola.generar_programacion_completa_reprogramacion2("+ru+","+gestion+","+periodo+")");
   },
   getMateria(id){
-    console.log("Aqui el id"+id);
+    //console.log("Aqui el id"+id);
     return querys.select("select * from pln_materias where id_materia="+id);
   },
   getCertiValid(ru,clave){
@@ -256,11 +256,16 @@ Meteor.methods({
                           where n.id_alumno="+ru+" and (n.nota>=51 or n.nota_2da>=51) and m.sigla<>'PRE000' \
                           order by n.id_gestion,n.id_periodo");
   },
+  getAlumPlan(ru){
+    return querys.select("SELECT id_plan FROM alumnos WHERE id_alumno="+ru);
+  },
   //aun sin uso
   getCanPlanes(){
     return querys.select("select * from consola.director_planes_cantidades('SIS');");
   },
-
+  getVeriFechaLimiteProEspecial(gest,peri){
+    return querys.select("select * from consola.verificarfechaprogramacionespecial('SIS',"+gest+","+peri+")");
+  },
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");

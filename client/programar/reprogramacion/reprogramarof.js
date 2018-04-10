@@ -11,17 +11,16 @@ Template.programarofof.onCreated(function(){
 
     //console.log("re");
     /* arreder a instancia superior */
-    this.superior = this.view.parentView.parentView.templateInstance();
-    this.gestiont.set(this.superior.gestion.get())
-    this.periodot.set(this.superior.periodo.get())
-    //
-    
-    //console.log("reactivo funsiona");
+    //console.log(Template.currentData().gestion.toString());
+    //console.log(Template.currentData().periodo.toString());
+    //this.superior = this.view.parentView.parentView.templateInstance();
+    this.gestiont.set(Template.currentData().gestion.toString())
+    this.periodot.set(Template.currentData().periodo.toString())
 
     self.autorun(function(){
         self.subscribe('materias');
         self.subscribe('progra');
-        Meteor.call('getMateriasReprogramacion',id ,self.superior.gestion.get() ,self.superior.periodo.get() ,(error, result)=>{
+        Meteor.call('getMateriasReprogramacion',id ,self.gestiont.get() ,self.periodot.get() ,(error, result)=>{
             //console.log(result.rows);
             self.resultReProgra.set(result.rows);
         });
@@ -34,7 +33,7 @@ Template.programarofof.helpers({
     },
     /* cambio de nombre de foranes */
     nombreMateria : function(id){
-        console.log(id);
+        //console.log(id);
         return ReactiveMethod.call('getMateria',id).rows[0].materia;
         //console.log(res);
         //return res
@@ -53,7 +52,7 @@ Template.programarofof.helpers({
         
     },
     nombreSigla : function(id){
-        console.log(id);
+        //console.log(id);
         return ReactiveMethod.call('getMateria',id).rows[0].sigla;
     },
 

@@ -8,14 +8,16 @@ Template.reproprogramarespecialof.onCreated(function(){
     id = FlowRouter.getParam('id');
 
     /* arreder a instancia superior */
-    this.superior = this.view.parentView.parentView.templateInstance();
-    this.gestiont.set(this.superior.gestion.get())
-    this.periodot.set(this.superior.periodo.get())
+    //this.superior = this.view.parentView.parentView.templateInstance();
+    //console.log(Template.currentData().gestion.toString());
+    //console.log(Template.currentData().periodo.toString());
+    this.gestiont.set(Template.currentData().gestion.toString());
+    this.periodot.set(Template.currentData().periodo.toString());
 
     self.autorun(function(){
         self.subscribe('materias');
         self.subscribe('progra');
-        Meteor.call('getMateriasReprogramacion',id ,self.superior.gestion.get() ,self.superior.periodo.get() ,(error, result)=>{
+        Meteor.call('getMateriasReprogramacion',id ,self.gestiont.get() ,self.periodot.get() ,(error, result)=>{
             self.resultReProgra.set(result.rows);
         });
     });
@@ -44,7 +46,7 @@ Template.reproprogramarespecialof.helpers({
         var id = FlowRouter.getParam('id').toString();
         var ges = Number(Template.instance().gestiont.get());
         var per = Number(Template.instance().periodot.get());
-        //console.log(id+" "+ges+" "+per);
+        console.log(id+" "+ges+" "+per);
         
         res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:"ESPECIAL"});
         //console.log(res)

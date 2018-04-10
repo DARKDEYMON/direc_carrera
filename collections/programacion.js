@@ -44,8 +44,10 @@ prograShema = new SimpleSchema({
             //console.log(this.obj.$set);
             modifi = this.obj.$set || this.obj;
             //console.log(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count());
-            if(!(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count()===0))
+            if(!(progra.find({materias_id:modifi.materias_id, alumno_id:modifi.alumno_id, gestion_id:modifi.gestion_id, periodo_id:modifi.periodo_id }).count()===0)){
+                //console.log("ya programado");
                 return "yaProgramado";
+            }
         }
     },
     dateInsert : {

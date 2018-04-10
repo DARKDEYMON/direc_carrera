@@ -17,21 +17,6 @@
             <button type="submit" class="btn btn-primary">Insert</button>
         </form>
         
-        {{!--
-            {{#if getCertfValid }}
-                {{ getCertfValid }}
-                {{#if gestionb }}
-                    {{ gestionb }}
-                    
-                {{else}}
-                    <p>1 {{ gestionb }}</p>
-                {{/if}}
-            {{else}}
-                <p>2</p>
-            {{/if}}
-            <p>{{ getCertfValid }} + {{ gestionb }}</p>
-        --}}
-        
         {{#if getCertfValid }}
             <h1>Programar</h1>
             {{#autoForm collection="progra" id="insertProgramarForm33" type="insert" }}
@@ -49,7 +34,7 @@
                 <button type="submit" class="btn btn-primary">Insert</button>
             {{/autoForm}}
             
-            {{> programarofof }}
+            {{> programarofof gestion=gestion periodo=periodo }}
         {{/if}}
         {{#if getCertInvalidMessage}}
             <p>Certificado erroneo</p>

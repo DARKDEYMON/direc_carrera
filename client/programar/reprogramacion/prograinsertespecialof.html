@@ -11,27 +11,29 @@
                             <input type="text" required class="form-control periodo" name="periodo" value="1" autocomplete="off" placeholder="Periodo">
                         </div>
                         <button type="submit" class="btn btn-primary">Insert</button>
-                    </form>
-                
+                    </form> 
                 {{#if gestionChange}}
-                    <h1>Nueva programacion</h1>
-                    {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
-                        {{#if afFieldIsInvalid name='alumno_id'}}
-                            <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
-                        {{/if}}
-                        {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
-                        {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
-                        
-                        {{> afQuickField name='gestion_id' value=gestion type="hidden"}} 
-                        {{> afQuickField name='periodo_id' value=periodo type="hidden"}}
-                        
-                        {{> afQuickField name='materias_id' options=getOptions }}
-                        {{> afQuickField name='id_grupo' options=getOptionGroups }}
-                        
-                        <button type="submit" class="btn btn-primary">Insert</button>
-                    {{/autoForm}}
-                    
-                    {{> reproprogramarespecialof }}
+                    {{#if veriPrograEs }}
+                        <h1>Nueva programacion</h1>
+                        {{#autoForm collection="progra" id="insertProgramarForm3" type="insert" }}
+                            {{#if afFieldIsInvalid name='alumno_id'}}
+                                <span class="help-block"> Error {{afFieldMessage name='alumno_id'}}</span>
+                            {{/if}}
+                            {{> afQuickField name='alumno_id' value=idAlumno type="hidden"}}
+                            {{> afQuickField name='metodo_programacion' value=idTipoProgramacion type="hidden"}}
+                            
+                            {{> afQuickField name='gestion_id' value=gestion type="hidden"}} 
+                            {{> afQuickField name='periodo_id' value=periodo type="hidden"}}
+                            
+                            {{> afQuickField name='materias_id' options=getOptions }}
+                            {{> afQuickField name='id_grupo' options=getOptionGroups }}
+                            
+                            <button type="submit" class="btn btn-primary">Insert</button>
+                        {{/autoForm}}
+                        {{> reproprogramarespecialof gestion=gestion periodo=periodo }}
+                    {{else}}
+                        <p>La fecha de programacion termino</p>
+                    {{/if}}
                 {{/if}}
         </div>
         <div></div>

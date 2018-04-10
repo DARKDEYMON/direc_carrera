@@ -26,7 +26,7 @@ Template.programarof.onCreated(function(){
                 //console.log(result.rows[0].estudianteloginkey);
                 return self.certfValid.set(true)
                 /*poner esta en produccion */
-                //return self.certfValid.set(result.rows[0].estudianteloginkey);  
+                //return self.certfValid.set(result.rows[0].estudianteloginkey);
             });
         }
     });

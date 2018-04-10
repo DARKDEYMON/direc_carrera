@@ -1,0 +1,42 @@
+<Template name="showprograesp">
+    <div class="grid-sis">
+        <div></div>
+        <div>			
+                <div class="container">
+                    <h2>Materias Programadas</h2>
+                                
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Materias</th>
+                          <th>Sigla</th>
+                          <th>Grupo</th>
+                          <th>Fecha de programacion</th>
+                          <th>Gestion</th>
+                          <th>Periodo</th>
+                          <th>Tipo de Programacion</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                            
+                          
+                            {{#each materiasProgra }}
+                                <tr>
+                                    <td>{{ materia_aux }}</td>
+                                    <td>{{ sigla_aux }}</td>
+                                    <td>{{ id_grupo }}</td>
+                                    <td>{{ dateFormat dateInsert }}</td>
+                                    <td>{{ gestion_id }}</td>
+                                    <td>{{ periodo_id }}</td>
+                                    <th>{{ metodo_programacion }}</th>
+                                </tr>
+                            {{/each}}
+                            
+                      </tbody>
+                    </table>
+                </div>
+        </div>
+        <div></div>
+    </div>
+</Template>
