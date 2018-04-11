@@ -1,0 +1,52 @@
+<Template name="vermalla">
+        <div class="grid-sis">
+            <div></div>
+            <div>
+                <h2>Mallas</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nivel Academico</th>
+                            <th>Sigla</th>
+                            <th>Materia</th>
+                            <th>H. Teoricas</th>
+                            <th>H. Practicas</th>
+                            <th>H. Laboratorio</th>
+                            <th>Requisitos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each mallac}}
+                            <tr>
+                                <td>
+                                    {{ nivel_academico }}
+                                </td>
+                                <td>
+                                    {{ sigla }}
+                                </td>
+                                <td>
+                                    {{ materia }}
+                                </td>
+                                <td>
+                                    {{ hrs_teoricas }}
+                                </td>
+                                <td>
+                                    {{ hrs_practicas }}
+                                </td>
+                                <td>
+                                    {{ hrs_laboratorio }}
+                                </td>
+                                <td style="word-wrap: break-word;
+                                max-width: 300px;">
+                                    {{#each requisitos }}
+                                        {{ this }} 
+                                    {{/each}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div></div>
+        </div>
+    </Template>

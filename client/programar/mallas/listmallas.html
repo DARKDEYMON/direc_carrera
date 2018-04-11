@@ -1,0 +1,33 @@
+<Template name="mallas">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <h2>Mallas</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Malla</th>
+                        <th>Cantidad Alumnos</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each mallas}}
+                        <tr>
+                            <td>
+                                {{ r_id_plan }}
+                            </td>
+                            <td>
+                                {{ r_cantidad }}
+                            </td>
+                            <td>
+                                <a href="{{ pathFor 'vermalla' id=r_id_plan }}" type="button" class="btn btn-primary">Ver</a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div></div>
+    </div>
+</Template>

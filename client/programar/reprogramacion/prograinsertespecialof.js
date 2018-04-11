@@ -30,7 +30,6 @@ Template.programarespecial.onCreated(function(){
 
 Template.programarespecial.helpers({
     veriPrograEs: function(){
-        //console.log(Template.instance().veriPrograEs.get());
         return Template.instance().veriPrograEs.get();
     },
     gestion:  function(){

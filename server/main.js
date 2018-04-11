@@ -259,12 +259,21 @@ Meteor.methods({
   getAlumPlan(ru){
     return querys.select("SELECT id_plan FROM alumnos WHERE id_alumno="+ru);
   },
-  //aun sin uso
   getCanPlanes(){
-    return querys.select("select * from consola.director_planes_cantidades('SIS');");
+    return querys.select("select * from consola.director_planes_cantidades('SIS') order by r_id_plan desc");
   },
   getVeriFechaLimiteProEspecial(gest,peri){
     return querys.select("select * from consola.verificarfechaprogramacionespecial('SIS',"+gest+","+peri+")");
+  },
+  getMallaCurricular(idplan){
+    return querys.select("select m.sigla::character varying,m.materia::character varying,m.hrs_teoricas::integer,m.hrs_practicas::integer,m.hrs_laboratorio::integer,m.nivel_academico::integer,m.ciclo::integer,p.id_materia_eqv::integer, array_agg((select sigla from pln_materias where id_materia=p2.id_materia_ant and p2.tipo<>'C')::character varying) as requisitos from planes p \
+            left join planes p2 \
+              on p.id_materia_eqv=p2.id_materia_eqv and p.id_plan=p2.id_plan and p.id_programa=p2.id_programa \
+            left join pln_materias m \
+              on m.id_materia=p.id_materia_eqv \
+            where p.id_plan="+ idplan +" and p.id_programa='SIS' and p.id_materia_ant=p.id_materia_eqv and p.tipo='P' and p2.tipo!='P' and m.id_dpto='1' \
+            group by m.sigla,m.materia,m.hrs_teoricas,m.hrs_practicas,m.hrs_laboratorio,m.nivel_academico,m.ciclo,p.id_materia_eqv \
+            order by nivel_academico,sigla;");
   },
   /* -ofi */
   getAlumnosPg(){
