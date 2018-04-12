@@ -20,7 +20,7 @@ shell-server@0.3.1            # Server-side component of the `meteor shell` comm
 #autopublish@1.0.7             # Publish all data to the clients (for prototyping)
 #insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
 
-underscore@1.0.10                     #tool
+underscore@1.0.10              #tool
 twbs:bootstrap                 #desing framework
 aldeed:collection2             #add shemas
 #mios
@@ -43,3 +43,9 @@ perak:joins                     #joins
 
 simple:reactive-method          #reactive para call en helpers
 momentjs:moment                 #manipulacion de fechas
+
+#accounts login
+accounts-base
+accounts-password
+useraccounts:bootstrap
+softwarerero:accounts-t9n

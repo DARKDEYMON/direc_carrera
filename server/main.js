@@ -275,6 +275,9 @@ Meteor.methods({
             group by m.sigla,m.materia,m.hrs_teoricas,m.hrs_practicas,m.hrs_laboratorio,m.nivel_academico,m.ciclo,p.id_materia_eqv \
             order by nivel_academico,sigla;");
   },
+  getProgramas(){
+    return querys.select("select id_programa,programa from alm_programas;");
+  },
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
