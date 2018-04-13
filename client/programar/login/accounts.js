@@ -1,20 +1,6 @@
+import { Promise } from 'meteor/promise';
+
 T9n.setLanguage("es");
-//poner a carrera
-async function materias(){
-	var res=[];
-	res = await( new Promise((resolve, reject) => {
-		Meteor.call('getProgramas',(error,result)=>{
-			resolve( result.rows.map(function(doc){
-				return {text: doc.programa ,value: doc.id_programa}
-			}))
-		});
-	 })
-	)
-	return res;
-}
-
-
-console.log(materias());
 
 AccountsTemplates.addFields([
 	{
@@ -114,6 +100,16 @@ AccountsTemplates.addFields([
 	        },
 	    ],
 	},
+	
+	{
+		_id: "carrera",
+		type: "select",
+		template: "selecttemplate",
+		displayName: "Carrera",
+		required: true, 
+		select: [],
+	},
+	
 ]);
 
 

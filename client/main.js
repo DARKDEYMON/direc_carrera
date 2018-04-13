@@ -1,5 +1,3 @@
-
-
 /* helpers glovales */
 Template.registerHelper('idTipoProgramacion',function(){
   dir = FlowRouter.current().route.name;
@@ -11,4 +9,11 @@ Template.registerHelper('idTipoProgramacion',function(){
         if(dir =="programarespecial")
             return "ESPECIAL"
         return "DESCONOSIDO";
+});
+
+Template.cabecera.events({ 
+    'click #salir': function(event, template) { 
+         //console.log("aqui");
+         Meteor.logout();
+    }
 });

@@ -1,0 +1,10 @@
+<template name="selecttemplate">
+    <div class="at-input field">
+        <label>{{displayName}}</label>
+        <select class="form-control" id="at-field-{{_id}}" name="at-field-{{_id}}">
+        {{#each carreras}}
+            <option value="{{value}}">{{text}}</option>
+        {{/each}}
+        </select>
+    </div>
+</template>

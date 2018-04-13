@@ -171,6 +171,7 @@ Meteor.methods({
   /* !ofi */
   //los sis cambian en produccion
   getAlumnosPgLimit(limit){
+    //--sis
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos \
                           INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' limit "+limit)
   },
@@ -180,6 +181,7 @@ Meteor.methods({
     alumnos ON (alumnos.id_ra = u.id_ra)  where id_programa='SIS' 
     and concat(u.nombres||' '||u.paterno||' '||u.materno) like '%REYNALDO%PEREIRA%HEREDIA%'
     */
+   //--sis
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN \
                           alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' \
                           and cast(id_alumno as TEXT) like '%"+ ru +"%' limit "+limit)
@@ -203,6 +205,7 @@ Meteor.methods({
     return querys.select("SELECT count(*) as grupos FROM pln_materias m, dct_asignaciones a where m.id_materia=a.id_materia and m.id_materia="+ idMateria +" and id_gestion="+ gestion +" and id_periodo="+ periodo)
   },
   getMateriasFaltantes(malla,ru){
+    //--sis
     return querys.select("select * from consola._grafica_materias("+ malla +",'SIS') \
                              where r_id_materia not in(select r_id_materia from consola._grafica_materias_estado_completo("+ ru +","+ malla +",'SIS'))")
   },
@@ -260,12 +263,15 @@ Meteor.methods({
     return querys.select("SELECT id_plan FROM alumnos WHERE id_alumno="+ru);
   },
   getCanPlanes(){
+    //--sis
     return querys.select("select * from consola.director_planes_cantidades('SIS') order by r_id_plan desc");
   },
   getVeriFechaLimiteProEspecial(gest,peri){
+    //--sis
     return querys.select("select * from consola.verificarfechaprogramacionespecial('SIS',"+gest+","+peri+")");
   },
   getMallaCurricular(idplan){
+    //--sis
     return querys.select("select m.sigla::character varying,m.materia::character varying,m.hrs_teoricas::integer,m.hrs_practicas::integer,m.hrs_laboratorio::integer,m.nivel_academico::integer,m.ciclo::integer,p.id_materia_eqv::integer, array_agg((select sigla from pln_materias where id_materia=p2.id_materia_ant and p2.tipo<>'C')::character varying) as requisitos from planes p \
             left join planes p2 \
               on p.id_materia_eqv=p2.id_materia_eqv and p.id_plan=p2.id_plan and p.id_programa=p2.id_programa \
@@ -276,7 +282,7 @@ Meteor.methods({
             order by nivel_academico,sigla;");
   },
   getProgramas(){
-    return querys.select("select id_programa,programa from alm_programas;");
+    return querys.select("select id_programa,programa from alm_programas where activo='A';");
   },
   /* -ofi */
   getAlumnosPg(){
