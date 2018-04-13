@@ -170,20 +170,18 @@ Meteor.startup(() => {
 Meteor.methods({
   /* !ofi */
   //los sis cambian en produccion
-  getAlumnosPgLimit(limit){
-    //--sis
+  getAlumnosPgLimit(limit,progra){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos \
-                          INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' limit "+limit)
+                          INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='"+ progra +"' limit "+limit)
   },
-  getAlumnosPgLimitRu(ru,limit){
+  getAlumnosPgLimitRu(ru,limit,progra){
     /*
     select DISTINCT on (u.id_ra) * from uatf_datos u INNER JOIN 
     alumnos ON (alumnos.id_ra = u.id_ra)  where id_programa='SIS' 
     and concat(u.nombres||' '||u.paterno||' '||u.materno) like '%REYNALDO%PEREIRA%HEREDIA%'
     */
-   //--sis
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN \
-                          alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS' \
+                          alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='"+ progra +"' \
                           and cast(id_alumno as TEXT) like '%"+ ru +"%' limit "+limit)
   },
   //no en uso aun
@@ -204,10 +202,9 @@ Meteor.methods({
   getGruposMateria(idMateria,gestion,periodo){
     return querys.select("SELECT count(*) as grupos FROM pln_materias m, dct_asignaciones a where m.id_materia=a.id_materia and m.id_materia="+ idMateria +" and id_gestion="+ gestion +" and id_periodo="+ periodo)
   },
-  getMateriasFaltantes(malla,ru){
-    //--sis
-    return querys.select("select * from consola._grafica_materias("+ malla +",'SIS') \
-                             where r_id_materia not in(select r_id_materia from consola._grafica_materias_estado_completo("+ ru +","+ malla +",'SIS'))")
+  getMateriasFaltantes(malla,ru,progra){
+    return querys.select("select * from consola._grafica_materias("+ malla +",'"+ progra +"') \
+                             where r_id_materia not in(select r_id_materia from consola._grafica_materias_estado_completo("+ ru +","+ malla +",'"+ progra +"'))")
   },
   getKardex(ru,apro){
     add2 = " and iff(notas.nota_ex_mesa>50,notas.nota_ex_mesa,iff(notas.nota_2da>50,notas.nota_2da,notas.nota)) >50";
@@ -262,22 +259,19 @@ Meteor.methods({
   getAlumPlan(ru){
     return querys.select("SELECT id_plan FROM alumnos WHERE id_alumno="+ru);
   },
-  getCanPlanes(){
-    //--sis
-    return querys.select("select * from consola.director_planes_cantidades('SIS') order by r_id_plan desc");
+  getCanPlanes(progra){
+    return querys.select("select * from consola.director_planes_cantidades('"+ progra +"') order by r_id_plan desc");
   },
-  getVeriFechaLimiteProEspecial(gest,peri){
-    //--sis
-    return querys.select("select * from consola.verificarfechaprogramacionespecial('SIS',"+gest+","+peri+")");
+  getVeriFechaLimiteProEspecial(gest,peri,progra){
+    return querys.select("select * from consola.verificarfechaprogramacionespecial('"+ progra +"',"+gest+","+peri+")");
   },
-  getMallaCurricular(idplan){
-    //--sis
+  getMallaCurricular(idplan, progra){
     return querys.select("select m.sigla::character varying,m.materia::character varying,m.hrs_teoricas::integer,m.hrs_practicas::integer,m.hrs_laboratorio::integer,m.nivel_academico::integer,m.ciclo::integer,p.id_materia_eqv::integer, array_agg((select sigla from pln_materias where id_materia=p2.id_materia_ant and p2.tipo<>'C')::character varying) as requisitos from planes p \
             left join planes p2 \
               on p.id_materia_eqv=p2.id_materia_eqv and p.id_plan=p2.id_plan and p.id_programa=p2.id_programa \
             left join pln_materias m \
               on m.id_materia=p.id_materia_eqv \
-            where p.id_plan="+ idplan +" and p.id_programa='SIS' and p.id_materia_ant=p.id_materia_eqv and p.tipo='P' and p2.tipo!='P' and m.id_dpto='1' \
+            where p.id_plan="+ idplan +" and p.id_programa='"+progra+"' and p.id_materia_ant=p.id_materia_eqv and p.tipo='P' and p2.tipo!='P' and m.id_dpto='1' \
             group by m.sigla,m.materia,m.hrs_teoricas,m.hrs_practicas,m.hrs_laboratorio,m.nivel_academico,m.ciclo,p.id_materia_eqv \
             order by nivel_academico,sigla;");
   },

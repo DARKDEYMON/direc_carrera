@@ -3,7 +3,11 @@ Template.vermalla.onCreated(function(){
     this.mallac = new ReactiveVar([]);
     self=this;
     self.autorun(function(){
-        Meteor.call('getMallaCurricular',self.plan ,function(error, result){
+        const user = Meteor.user();
+        if (!user) {
+            return;
+        }
+        Meteor.call('getMallaCurricular', self.plan, user.profile.carrera ,function(error, result){
             console.log(result.rows);
             return self.mallac.set(result.rows);
         });

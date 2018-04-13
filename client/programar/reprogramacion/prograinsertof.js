@@ -7,7 +7,6 @@ Template.programarof.onCreated(function(){
     this.certf = new ReactiveVar('');
     
     this.certfValid = new ReactiveVar(undefined);
-    //console.log("aqui");
     this.cantGroup = new ReactiveVar(0);
 
     id = FlowRouter.getParam('id');
@@ -17,11 +16,9 @@ Template.programarof.onCreated(function(){
         self.subscribe('materias');
         self.subscribe('progra');
         Meteor.call('getMateriasProgra',id,self.gestion.get() ,self.periodo.get() ,(error, result)=>{
-            //console.log(result.rows);
             return self.resMateria.set(result.rows);
         });
         if(self.certf.get()!=''){
-            //console.log(id+" "+self.certf.get())
             Meteor.call('getCertiValid',id ,self.certf.get(), (error, result)=>{
                 //console.log(result.rows[0].estudianteloginkey);
                 return self.certfValid.set(true)
@@ -44,28 +41,21 @@ Template.programarof.helpers({
     },
     getOptions: function(){
         cursor = Template.instance().resMateria.get();
-        //console.log(cursor);
         return cursor.map(function(doc){
-            //console.log(doc)
             return {label: doc.r_materia, value: doc.r_id_materia};
         });
     },
     gestionb : function(){
-        //console.log(Template.instance().gestionb.get())
-        //console.log("aqui");
         return Template.instance().gestionb.get();
     },
     getInitYear : function(){
         return new Date().getFullYear();
     },
     getCertfValid : function(){
-        /* errores verificar */
         var res = Template.instance().certfValid.get();
         var res1 = Template.instance().gestionb.get();
-        //console.log(res);
         if(res===undefined)
             return true && res1;
-        /* retornar res en produccion enves de true  */
         return res && res1;
     },
     getCertInvalidMessage: function(){
@@ -76,6 +66,7 @@ Template.programarof.helpers({
         return !res;
     },
     getOptionGroups(){
+        /*si fuera grupos q existen ver */
         res = Template.instance().cantGroup.get();
         dataArray = []; 
         for(i=0;i<res;i++){
@@ -96,11 +87,9 @@ Template.programarof.events({
         Template.instance().gestionb.set(true);
         gestion = event.target.gestion.value.trim();
         Template.instance().gestion.set(gestion);
-        //console.log(gestion);
         
         periodo = event.target.periodo.value.trim();
         Template.instance().periodo.set(periodo);
-        //console.log(periodo);
 
         certf = event.target.certf.value.trim();
         Template.instance().certf.set(certf);

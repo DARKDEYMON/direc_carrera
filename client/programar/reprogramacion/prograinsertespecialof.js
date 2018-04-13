@@ -12,15 +12,17 @@ Template.programarespecial.onCreated(function(){
 
     this.veriPrograEs = new ReactiveVar(false);
     
-    self.autorun(function() { 
+    self.autorun(function() {
+        const user = Meteor.user();
+        if (!user) {
+            return;
+        }
         self.subscribe('materias');
         self.subscribe('progra');
-        //res = await Meteor.call('getAlumPlan',self.id);
-        //console.log(res);
-        Meteor.call('getMateriasFaltantes',self.resMallaId.get() ,self.id ,(error, result)=>{
+        Meteor.call('getMateriasFaltantes',self.resMallaId.get() ,self.id ,user.profile.carrera ,(error, result)=>{
             return self.resMateriaProgra.set(result.rows);
         });
-        Meteor.call('getVeriFechaLimiteProEspecial',self.gestion.get(),self.periodo.get(),(error, result)=>{
+        Meteor.call('getVeriFechaLimiteProEspecial',self.gestion.get(), self.periodo.get ,user.profile.carrera ,(error, result)=>{
             /*usar esto en produccion */
             //return self.veriPrograEs.set(result.rows[0].verificarfechaprogramacionespecial);
             return self.veriPrograEs.set(true);
@@ -43,7 +45,6 @@ Template.programarespecial.helpers({
     },
     getOptions: function() {
         var cursor = Template.instance().resMateriaProgra.get();
-        //console.log(cursor);
 
         return cursor.map(function(doc){
             return {label: doc.r_materia, value: doc.r_id_materia};
@@ -76,7 +77,6 @@ Template.programarespecial.events({
         Template.instance().periodo.set(periodo);
 
         var id = FlowRouter.getParam('id');
-        //console.log(id);
         Template.instance().gestionb.set(true);
     },
     'change .gest':function(event, template){

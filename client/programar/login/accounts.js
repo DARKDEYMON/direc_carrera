@@ -2,6 +2,24 @@ import { Promise } from 'meteor/promise';
 
 T9n.setLanguage("es");
 
+AccountsTemplates.configure({
+	//homeRoutePath:'/',
+	hideSignInLink : true,
+	hideSignUpLink : true,
+	onLogoutHook: function(){
+		FlowRouter.go('login');
+	},
+    onSubmitHook: function(){
+		FlowRouter.go('home');
+	},
+	/*
+	preSignUpHook: function(){
+		console.log("aqui2");
+	},
+	*/
+    //postSignUpHook: myPostSubmitFunc,
+});
+
 AccountsTemplates.addFields([
 	{
 	    _id: 'nombres',
@@ -111,13 +129,3 @@ AccountsTemplates.addFields([
 	},
 	
 ]);
-
-
-AccountsTemplates.configure({
-	hideSignInLink : true,
-	hideSignUpLink : true,
-	//onLogoutHook: myLogoutFunc,
-    //onSubmitHook: mySubmitFunc,
-    //preSignUpHook: myPreSubmitFunc,
-    //postSignUpHook: myPostSubmitFunc,
-});

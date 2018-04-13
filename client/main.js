@@ -13,7 +13,7 @@ Template.registerHelper('idTipoProgramacion',function(){
 
 Template.cabecera.events({ 
     'click #salir': function(event, template) { 
-         //console.log("aqui");
-         Meteor.logout();
+        //Meteor.logout();
+        AccountsTemplates.logout();
     }
 });

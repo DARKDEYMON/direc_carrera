@@ -23,29 +23,28 @@ shell-server@0.3.1            # Server-side component of the `meteor shell` comm
 underscore@1.0.10              #tool
 twbs:bootstrap                 #desing framework
 aldeed:collection2             #add shemas
+
 #mios
 kadira:flow-router             #routes
 kadira:blaze-layout            #blaze semi render
 aldeed:autoform                #generate forms
-nilsdannemann:pdfmake          #pdf
-
-#meteorsteam:meteor-postgres
-#austinrivas:postgresql
-#numtel:pg
-
-arillo:flow-router-helpers      #routes render
-aldeed:delete-button            #delete
-easy:search                     #search opt
-navybits:pagination
-
-matb33:collection-hooks         #before and after for mongo
-perak:joins                     #joins
-
-simple:reactive-method          #reactive para call en helpers
-momentjs:moment                 #manipulacion de fechas
+aldeed:delete-button           #delete
+matb33:collection-hooks        #before and after for mongo
+momentjs:moment                #manipulacion de fechas
+arillo:flow-router-helpers     #routes render
 
 #accounts login
 accounts-base
 accounts-password
 useraccounts:bootstrap
 softwarerero:accounts-t9n
+
+#prubas si es que sirvieran nada oficial
+#meteorsteam:meteor-postgres
+#austinrivas:postgresql
+#numtel:pg
+nilsdannemann:pdfmake          #pdf
+easy:search                    #search opt
+navybits:pagination
+perak:joins                    #joins
+simple:reactive-method         #reactive para call en helpers

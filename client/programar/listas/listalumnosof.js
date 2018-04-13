@@ -2,14 +2,21 @@ Template.lisalumof.onCreated(function(){
     this.more = new ReactiveVar(10);
     this.search = new ReactiveVar('');
     this.searchres = new ReactiveVar('');
+    //this.carrera = new ReactiveVar();// .profile.carrera;
     self = this;
+    console.log(Meteor.user());
     self.autorun(function(){
+        const user = Meteor.user();
+        if (!user) {
+            return;
+        }
+        //console.log(user.profile.carrera);
         if(self.search.get()=='')
-            Meteor.call('getAlumnosPgLimit',self.more.get(),(error,result)=>{
+            Meteor.call('getAlumnosPgLimit',self.more.get() ,user.profile.carrera, (error,result)=>{
                 self.searchres.set(result.rows);
             });
         else
-            Meteor.call('getAlumnosPgLimitRu',self.search.get() ,self.more.get() ,(error, result)=>{
+            Meteor.call('getAlumnosPgLimitRu',self.search.get() ,self.more.get() ,user.profile.carrera ,(error, result)=>{
                 self.searchres.set(result.rows);
             });
     });
