@@ -1,0 +1,47 @@
+<Template name="listdocentesof">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <div class="container">
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                        <label class="control-label">Periodo</label>
+                        <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
+                    </div>
+                </form>
+                <h2>Lista de Docentes</h2>         
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>N°</th>
+                          <th>Docente</th>
+                          <th>Ci</th>
+                          <th>Email</th>
+                          <th>Telefono</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            {{#each docentes }}
+                                <tr>
+                                    <td>{{ indexre @index }}</td>
+                                    <td>{{ doc }}</td>
+                                    <td>{{ ci }}</td>
+                                    <td>{{ email }}</td>
+                                    <td>{{ telefono_per }}</td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="5">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                      </tbody>
+                    </table>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

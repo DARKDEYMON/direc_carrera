@@ -1,0 +1,49 @@
+<Template name="listapos">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <div class="container">
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                    </div>
+                </form>
+                <h2>Lista de Postulantes Beca Alimentacion</h2>         
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>N°</th>
+                          <th>RU</th>
+                          <th>Nombre Completo</th>
+                          <th>Social</th>
+                          <th>Academico</th>
+                          <th>Total</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            {{#each listapos }}
+                                <tr>
+                                    <td>{{ indexre @index }}</td>
+                                    <td>{{ id_alumno }}</td>
+                                    <td>{{ nombres }}</td>
+                                    <td>{{ sit_social }}</td>
+                                    <td>{{ sit_acad }}</td>
+                                    <td>{{ total }}</td>
+                                    <td>{{ estado }}</td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="5">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                      </tbody>
+                    </table>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

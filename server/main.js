@@ -381,6 +381,61 @@ Meteor.methods({
                       GROUP BY a.id_alumno,m.id_materia, m.sigla,m.materia, n.id_grupo, n.nota,nota_final,m.nivel_academico,n.pparcial,n.sparcial,n.tparcial\
                       ORDER BY nota_final ASC) as pr1 group by id_materia");
   },*/
+  getDocentes(progra, gestion, periodo){
+    return querys.select("SELECT DISTINCT (d.paterno||' '||d.materno||' '||d.nombres) as doc , d.ci, d.email, d.telefono_per \
+            FROM alm_programaciones p, alumnos a, pln_materias m,alm_programas pr, alm_programas_facultades f, dct_asignaciones asi, docentes d \
+          WHERE d.id_docente=asi.id_docente \
+          AND a.id_alumno  = p.id_alumno \
+            AND m.id_materia = p.id_materia	\
+            AND pr.id_programa =  a.id_programa \
+            AND pr.id_facultad =  f.id_facultad	 \
+            AND p.id_gestion   =  "+ gestion +" \
+            AND p.id_periodo   =  "+ periodo +" \
+            AND a.id_programa  =  '"+ progra +"' \
+          AND p.id_materia = asi.id_materia \
+          AND asi.id_grupo = p.id_grupo \
+          AND asi.id_gestion=p.id_gestion and asi.id_periodo=p.id_periodo \
+                  AND p.id_materia not in(8021,8022,8023,8024,8025,8026,8027,8028,8029,8030,8031,8032,8033,8034) \
+          GROUP BY f.facultad,pr.programa,p.id_materia,m.sigla,m.materia,p.id_grupo,d.nombres,d.paterno,d.materno,d.ci,d.email,d.telefono_per")
+  },
+  //alimentacion
+  getPostulantes(progra, gestion){
+    return querys.select("SELECT 	\
+                utf.nro_dip \
+              , bp.id_alumno \
+              , trim(trim(utf.paterno || ' ' || utf.materno) || ', ' || utf.nombres) as nombres \
+              , f.puntaje AS ps \
+              , e.puntaje AS pe \
+              , p.puntaje AS pp \
+              , vf.puntaje AS pvf \
+              , ve.puntaje AS pve \
+              , bp.sit_social \
+              , (SELECT COUNT(id_materia) FROM notas_planilla \
+                WHERE id_alumno = bp.id_alumno AND observacion <> 'C' AND id_gestion > '1993' AND iff(nota_ex_mesa>0,nota_ex_mesa,iff(nota_2da>0,nota_2da,nota))>=51 \
+                ) as maprov \
+              , (SELECT COUNT(id_materia) FROM notas_planilla \
+                WHERE id_alumno = bp.id_alumno AND observacion <> 'C' AND id_gestion > '1993' \
+                ) as mtotal \
+              , bp.sit_acad \
+              , (bp.sit_social + bp.sit_acad) as total \
+              , bp.obs \
+              , bp.estado \
+              , bi.* \
+            FROM bc_postulantes bp \
+              INNER JOIN alumnos				       alm ON alm.id_alumno = bp.id_alumno \
+              INNER JOIN uatf_datos 				       utf ON utf.id_ra     = alm.id_ra \
+              INNER JOIN bc_items_becas 				bi ON bi.id_programa = alm.id_programa AND bi.id_gestion = bp.id_gestion AND bi._estado <> 'X' \
+              LEFT OUTER JOIN o_bc_puntaje_familiar  			f  ON    f.id_p_fam::integer = bp.familiar::integer		AND  f.id_gestion = bp.id_gestion \
+              LEFT OUTER JOIN o_bc_puntaje_economico 			e  ON    e.id_p_eco::integer = bp.economico::integer		AND  e.id_gestion = bp.id_gestion \
+              LEFT OUTER JOIN o_bc_puntaje_procedencia 		p  ON    p.id_p_pro::integer = bp.procedencia::integer		AND  p.id_gestion = bp.id_gestion \
+              LEFT OUTER JOIN o_bc_puntaje_vivienda_familiar 		vf ON vf.id_p_viv_f::integer = bp.vivienda_familiar::integer	AND vf.id_gestion = bp.id_gestion \
+              LEFT OUTER JOIN o_bc_puntaje_vivienda_estudiante 	ve ON ve.id_p_viv_e::integer = bp.vivienda_estudiante::integer	AND ve.id_gestion = bp.id_gestion \
+            WHERE \
+                alm.id_programa = '"+ progra +"' \
+              AND bp.id_gestion  = "+ gestion +" \
+              AND bp.tipo_post   = 'A' \
+            ORDER BY bp.estado, total DESC, nombres ASC;");
+  },
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
@@ -393,9 +448,11 @@ Meteor.methods({
 
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra) where id_programa='SIS' and (nombres||' '||paterno||' '||materno||' '||id_alumno) ILIKE '%"+alum+"%';");
   },
+  /*
   getDocentes(){
     return querys.select("select * from docentes where id_programa='SIS' AND estado='A';");
   },
+  */
 });
 
 /* querys a db postgres */

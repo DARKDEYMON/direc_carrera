@@ -9,7 +9,6 @@ Template.materiasestado.onCreated(function(){
             return;
         }
         Meteor.call('getMateriasEstado', self.gestion.get(), self.periodo.get(), user.profile.carrera, (error, result)=>{
-            console.log(result);
             return self.estadoMateria.set(result.rows);
         });
     });
