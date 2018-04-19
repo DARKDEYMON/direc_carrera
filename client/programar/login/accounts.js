@@ -103,23 +103,6 @@ AccountsTemplates.addFields([
 	    required: true, 
 	},
 	{
-	    _id: "Carrera",
-	    type: "select",
-	    displayName: "Estado",
-	    required: true, 
-	    select: [
-	        {
-	            text: "Activado",
-	            value: true,
-	        },
-	        {
-	            text: "Desactivado",
-	            value: false,
-	        },
-	    ],
-	},
-	
-	{
 		_id: "carrera",
 		type: "select",
 		template: "selecttemplate",
@@ -127,5 +110,4 @@ AccountsTemplates.addFields([
 		required: true, 
 		select: [],
 	},
-	
 ]);

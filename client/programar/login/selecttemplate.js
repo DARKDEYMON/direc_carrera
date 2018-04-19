@@ -7,7 +7,6 @@ Template.selecttemplate.onCreated(function(){
             return {text: doc.programa ,value: doc.id_programa}
         });
         self.carreras.set(res);
-        //console.log(res);
     });
 });
 

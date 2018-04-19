@@ -3,15 +3,6 @@
         <div></div>
         <div>
             <h2>Alumnos</h2>
-            <!--
-             <select class="form-control">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-            </select>
-            -->
             <input type="text" class="form-control search"  placeholder="Buscar por Ru...">         
             <table class="table table-bordered">
                 <thead>
@@ -47,11 +38,8 @@
                                         <li><a href="{{ pathFor 'pensun' ru=id_alumno }}">Pensun</a></li>
                                         <li><a id="pensun" href="" value="{{ id_alumno }}">Pensun Pdf</a></li>
                                         <li><a href="{{ pathFor 'ranking' ru=id_alumno }}">Ranking</a></li>
-                                        <!--<li><a href="{{ pathFor 'programarespecial' id=id_alumno }}" >P. Especial</a></li>-->
                                    </ul> 
                                 </div>
-                                
-                                
                             </td>
                         </tr>
                     {{else}}

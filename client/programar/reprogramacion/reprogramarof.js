@@ -9,10 +9,7 @@ Template.programarofof.onCreated(function(){
     self = this;
     id = FlowRouter.getParam('id');
 
-    //console.log("re");
     /* arreder a instancia superior */
-    //console.log(Template.currentData().gestion.toString());
-    //console.log(Template.currentData().periodo.toString());
     //this.superior = this.view.parentView.parentView.templateInstance();
     this.gestiont.set(Template.currentData().gestion.toString())
     this.periodot.set(Template.currentData().periodo.toString())
@@ -62,13 +59,10 @@ Template.programarofof.helpers({
         var id = FlowRouter.getParam('id').toString();
         var ges = Number(Template.instance().gestiont.get());
         var per = Number(Template.instance().periodot.get());
-        //console.log(id+" "+ges+" "+per);
         
         res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:{$ne:"ESPECIAL"}});
-        //console.log(res)
 
         //res = progra.find({alumno_id: id ,dateInsert: {$gte: new Date(ges, 1, 1), $lt: new Date(ges, 12, 31)} });
-        //console.log(res);
         return res;
     },
     docUpdate : function(){

@@ -1,0 +1,91 @@
+<Template name="listaprogra">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                        <label class="control-label">Periodo</label>
+                        <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
+                    </div>
+                </form>
+                <div class="container">
+                    <h2>Materias Programadas por Alumno</h2>  
+                    <input type="text" class="form-control search"  placeholder="Buscar por Ru...">       
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>C.I.</th>
+                          <th>R.U.</th>
+                          <th>Paterno</th>
+                          <th>materno</th>
+                          <th>Nombres</th>
+                          <th>Cantidad</th>
+                          <th>programaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          
+                            {{#each progra }}
+                                <tr>
+                                    <td>{{ r_nro_dip }}</td>
+                                    <td>{{ r_id_alumno }}</td>
+                                    <td>{{ r_paterno }}</td>
+                                    <td>{{ r_materno  }}</td>
+                                    <td>{{ r_nombres }}</td>
+                                    <td>{{ r_cantidad }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{@index}}">Ver Programacion</button>
+                                    </td>
+                                </tr>
+                                <tr id="{{@index}}" class="collapse">
+                                    <td colspan="7">
+                                        <h4>Programacion</h4>
+                                        <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th>Sigla</th>
+                                                <th>Materia</th>
+                                                <th>Grupo</th>
+                                                <th>Tipo</th>
+                                                <th>Metodo</th>
+                                                <th>Metodo Programacion</th>
+                                                <th>Usuario</th>
+                                                <th>Fecha</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            {{#each r_materias}}
+                                                <tr>
+                                                    <td>{{ sigla }}</td>
+                                                    <td>{{ materia }}</td>
+                                                    <td>{{ grupo }}</td>
+                                                    <td>{{ tipo }}</td>
+                                                    <td>{{ tipo_metodo }}</td>
+                                                    <td>{{ metodo }}</td>
+                                                    <td>{{ usuario }}</td>
+                                                    <td>{{ fecha }}</td>
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="11">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}} 
+                      </tbody>
+                    </table>
+                </div>
+                <div class="center">
+                    <button class="btn btn-primary dispmore">Ver mas</button>
+                </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

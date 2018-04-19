@@ -9,8 +9,6 @@ Template.reproprogramarespecialof.onCreated(function(){
 
     /* arreder a instancia superior */
     //this.superior = this.view.parentView.parentView.templateInstance();
-    //console.log(Template.currentData().gestion.toString());
-    //console.log(Template.currentData().periodo.toString());
     this.gestiont.set(Template.currentData().gestion.toString());
     this.periodot.set(Template.currentData().periodo.toString());
 
@@ -31,13 +29,10 @@ Template.reproprogramarespecialof.helpers({
     nombreMateria : function(id){
         //console.log(id);
         return ReactiveMethod.call('getMateria',id).rows[0].materia;
-        //return res
     },
     nombreSigla : function(id){
         //console.log(id);
         return ReactiveMethod.call('getMateria',id).rows[0].sigla;
-        //console.log(res);
-        //return res
     },
 
     /* materiasd q tiene programadas */
@@ -49,8 +44,6 @@ Template.reproprogramarespecialof.helpers({
         console.log(id+" "+ges+" "+per);
         
         res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:"ESPECIAL"});
-        //console.log(res)
-
         //res = progra.find({alumno_id: id ,dateInsert: {$gte: new Date(ges, 1, 1), $lt: new Date(ges, 12, 31)} });
         //console.log(res);
         return res;
@@ -58,23 +51,20 @@ Template.reproprogramarespecialof.helpers({
     docUpdate : function(){
         //b = FlowRouter.getParam('id').toString();
         c = progra.findOne({_id:this._id});
-        //console.log(c);
         return c;
     },
     getOptions : function() {
         var cursor = Template.instance().resultReProgra.get();
-        //console.log(cursor);
         return cursor.map(function(doc){
             return {label: doc.r_materia, value: doc.r_id_materia};
         });
     },
     showform : function(){
-        //console.log(Template.instance().showform.get('showform')+"aqui");
         return Template.instance().showform.get('showform');
     },
 });
 
-Template.reproprogramarespecialof.events({ 
+Template.reproprogramarespecialof.events({
     'click .myButton' : function(event, template) {
         if(Template.instance().showform.get()){
             template.showform.set(false);

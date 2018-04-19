@@ -10,10 +10,9 @@ Template.registerHelper('idTipoProgramacion',function(){
             return "ESPECIAL"
         return "DESCONOSIDO";
 });
-
-Template.cabecera.events({ 
+/* Metodo logout */
+Template.cabecera.events({
     'click #salir': function(event, template) { 
-        //Meteor.logout();
         AccountsTemplates.logout();
     }
 });

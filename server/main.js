@@ -104,10 +104,6 @@ Meteor.startup(() => {
         lastName : "castillo"
       },
       {
-        name : "Flec",
-        lastName : "Esponja"
-      },
-      {
         name : "Aguida",
         lastName : "Paucara"
       }
@@ -277,6 +273,37 @@ Meteor.methods({
   },
   getProgramas(){
     return querys.select("select id_programa,programa from alm_programas where activo='A';");
+  },
+  //Estadisticas
+  getMejorEstudiante(progra,gestion,periodo){
+    return querys.select("select * from consola.director_mejores_alumno('"+ progra +"',"+ gestion +","+ periodo  +",10);")
+  },
+  getMatriculadosCant(progra, gestion, periodo){
+    return querys.select("select coalesce(count(*),0) as can from consola.director_lista_matriculados('"+ progra +"',"+ gestion +","+ periodo +");");
+  },
+  getMatriculados(progra, gestion, periodo, limit,ru){
+    if(ru===''){
+      return querys.select("select * from consola.director_lista_matriculados('"+ progra +"',"+ gestion +","+ periodo +") limit " + limit);
+    }else{
+      return querys.select("select * from consola.director_lista_matriculados('"+ progra +"',"+ gestion +","+ periodo +") where r_id_alumno::Text like'%"+ ru +"%' limit " + limit);
+    }
+  },
+  getProgramaciones(progra, gestion, periodo, limit, ru){
+    if(ru===''){
+      return querys.select("select r_nro_dip,r_id_alumno,r_paterno,r_materno,r_nombres,array_length(r_programacion,1) as \
+        r_cantidad, array_to_json(r_programacion) as r_materias from consola.director_lista_programaciones('"+ progra +"',"+ gestion +","+ periodo +") limit "+limit)
+    }else{
+      return querys.select("select r_nro_dip,r_id_alumno,r_paterno,r_materno,r_nombres,array_length(r_programacion,1) as \
+        r_cantidad, array_to_json(r_programacion) as r_materias from consola.director_lista_programaciones('"+ progra +"',"+ gestion +","+ periodo +") where r_id_alumno::Text like'%"+ ru +"%' limit "+limit)
+    }
+  },
+  //aqui estoy
+  getPromedioEstudiantes(progra, gestion, periodo, limit, ru){
+    if(ru===''){
+      return querys.select("select * from consola.director_promedio_estudiantes_('"+ progra +"',"+ gestion +","+ periodo +") limit "+limit)
+    }else{
+      return querys.select("select * from consola.director_promedio_estudiantes_('"+ progra +"',"+ gestion +","+ periodo +") where r_id_alumno::Text like'%"+ ru +"%' limit "+limit)
+    }
   },
   /* -ofi */
   getAlumnosPg(){

@@ -10,7 +10,6 @@ Template.lisalumof.onCreated(function(){
         if (!user) {
             return;
         }
-        //console.log(user.profile.carrera);
         if(self.search.get()=='')
             Meteor.call('getAlumnosPgLimit',self.more.get() ,user.profile.carrera, (error,result)=>{
                 self.searchres.set(result.rows);
@@ -45,7 +44,6 @@ Template.lisalumof.events({
     },
     'keyup .search' : function(event, template){
         search = event.target.value.trim();
-        //console.log(search)
         Template.instance().search.set(search);
         Template.instance().more.set(10);
     },

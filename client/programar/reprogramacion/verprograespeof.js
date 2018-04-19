@@ -43,7 +43,7 @@ Template.verprograespecial.events({
         Template.instance().periodo.set(periodo);
 
         var id = FlowRouter.getParam('id');
-        //console.log(id);
+
         Template.instance().gestionb.set(true);
     },
     'change .gest':function(event, template){

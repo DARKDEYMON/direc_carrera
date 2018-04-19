@@ -7,8 +7,6 @@ Template.showprograesp.onCreated(function(){
 
     /* arreder a instancia superior */
     //this.superior = this.view.parentView.parentView.templateInstance();
-    //console.log(Template.currentData().gestion.toString());
-    //console.log(Template.currentData().periodo.toString());
     this.gestiont.set(Template.currentData().gestion.toString());
     this.periodot.set(Template.currentData().periodo.toString());
 
@@ -30,10 +28,8 @@ Template.showprograesp.helpers({
         console.log(id+" "+ges+" "+per);
         
         res = progra.find({alumno_id:id, gestion_id:ges, periodo_id:per, metodo_programacion:"ESPECIAL"});
-        //console.log(res)
 
         //res = progra.find({alumno_id: id ,dateInsert: {$gte: new Date(ges, 1, 1), $lt: new Date(ges, 12, 31)} });
-        //console.log(res);
         return res;
     }
 });
