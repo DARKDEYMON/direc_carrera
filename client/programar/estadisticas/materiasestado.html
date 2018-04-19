@@ -1,0 +1,57 @@
+<Template name="materiasestado">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                        <label class="control-label">Periodo</label>
+                        <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
+                    </div>
+                </form>
+                <div class="container">
+                    <h2>Estado de las Materias</h2>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>N°</th>
+                          <th>Docente</th>
+                          <th>Sigla</th>
+                          <th>Materia</th>
+                          <th>Grupo</th>
+                          <th>1er Parcial/Can</th>
+                          <th>2er Parcial/Can</th>
+                          <th>3er Parcial/Can</th>
+                          <th>Abandonos</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            {{#each eatadoMateria }}
+                                <tr>
+                                    <td>{{ indexre @index }}</td>
+                                    <td>{{ doc }}</td>
+                                    <td>{{ sigla }}</td>
+                                    <td>{{ materia }}</td>
+                                    <td>{{ id_grupo  }}</td>
+                                    <td>{{ estadoExamen pr1 }}</td>
+                                    <td>{{ estadoExamen pr2 }}</td>
+                                    <td>{{ estadoExamen pr3 }}</td>
+                                    <td>{{ abandono }}</td>
+                                    <td>{{ total }}</td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="5">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                      </tbody>
+                    </table>
+                </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

@@ -297,7 +297,6 @@ Meteor.methods({
         r_cantidad, array_to_json(r_programacion) as r_materias from consola.director_lista_programaciones('"+ progra +"',"+ gestion +","+ periodo +") where r_id_alumno::Text like'%"+ ru +"%' limit "+limit)
     }
   },
-  //aqui estoy
   getPromedioEstudiantes(progra, gestion, periodo, limit, ru){
     if(ru===''){
       return querys.select("select * from consola.director_promedio_estudiantes_('"+ progra +"',"+ gestion +","+ periodo +") limit "+limit)
@@ -305,6 +304,83 @@ Meteor.methods({
       return querys.select("select * from consola.director_promedio_estudiantes_('"+ progra +"',"+ gestion +","+ periodo +") where r_id_alumno::Text like'%"+ ru +"%' limit "+limit)
     }
   },
+  getMateriasEstado(gestion, periodo, progra){
+    return querys.select("SELECT (d.paterno||' '||d.materno||' '||d.nombres) as doc ,f.facultad, pr.programa, p.id_materia, m.sigla,m.materia, p.id_grupo, count (p.id_alumno) as total, est.pr1, est.pr2, est.pr3, est.abandono  \
+            FROM alm_programaciones p, alumnos a, pln_materias m,alm_programas pr, alm_programas_facultades f, dct_asignaciones asi, docentes d,\
+          ( \
+            SELECT  \
+                id_materia,id_grupo, \
+                COUNT(case when pparcial=0 then 1 else null end)as pr1, \
+                COUNT(case when sparcial=0 then 1 else null end)as pr2, \
+                COUNT(case when tparcial=0 then 1 else null end)as pr3, \
+                COUNT(case nota_final when 0 then 1 else null end) as abandono  \
+            from ( \
+            SELECT DISTINCT m.id_materia, m.sigla, m.materia,a.id_alumno,n.id_grupo as id_grupo,m.nivel_academico,n.pparcial,n.sparcial,n.tparcial, \
+                    iff(n.nota > n.nota_2da,n.nota,iff(n.nota_2da > n.nota_ex_mesa,n.nota_2da,n.nota_ex_mesa)) as nota_final  \
+                    FROM  alm_programas p,pln_materias m, alumnos a, alm_programaciones n \
+                    WHERE p.id_programa  =  a.id_programa \
+                    AND   a.id_alumno    =  n.id_alumno    AND   p.id_programa =  a.id_programa \
+                    AND   m.id_materia   =  n.id_materia   AND   n.id_periodo  =  "+ periodo +" \
+                    AND   n.id_gestion   =  "+ gestion +"  AND   p.id_programa =  '"+ progra +"' \
+                    GROUP BY a.id_alumno,m.id_materia, m.sigla,m.materia, n.id_grupo, n.nota,nota_final,m.nivel_academico,n.pparcial,n.sparcial,n.tparcial,n.id_gestion \
+                    ORDER BY nota_final ASC) as pr1 group by id_materia, id_grupo  \
+          ) as est \
+          WHERE d.id_docente=asi.id_docente \
+          AND est.id_materia = p.id_materia \
+          AND est.id_grupo = p.id_grupo \
+          AND a.id_alumno  = p.id_alumno \
+            AND m.id_materia = p.id_materia	  \
+            AND pr.id_programa =  a.id_programa \
+            AND pr.id_facultad =  f.id_facultad	  \
+            AND p.id_gestion   =  "+ gestion +" \
+            AND p.id_periodo   =  "+ periodo +"	 \
+            AND a.id_programa  =  '"+ progra +"'  \
+          AND p.id_materia = asi.id_materia \
+          AND asi.id_grupo = p.id_grupo \
+          AND asi.id_gestion=p.id_gestion and asi.id_periodo=p.id_periodo \
+                  AND p.id_materia not in(8021,8022,8023,8024,8025,8026,8027,8028,8029,8030,8031,8032,8033,8034) \
+          GROUP BY f.facultad,pr.programa,p.id_materia,m.sigla,m.materia,p.id_grupo,d.nombres,d.paterno,d.materno, est.pr1, est.pr2, est.pr3, est.abandono \
+          ORDER BY m.sigla,p.id_grupo;")
+  },
+  //aqui estoy
+  /*
+  getMateriasEstado(gestion, periodo, progra){
+    return querys.select("SELECT (d.paterno||' '||d.materno||' '||d.nombres) as doc ,f.facultad, pr.programa, p.id_materia, m.sigla,m.materia, p.id_grupo, count (p.id_alumno) as total \
+              FROM alm_programaciones p, alumnos a, pln_materias m,alm_programas pr, alm_programas_facultades f, dct_asignaciones asi, docentes d \
+            WHERE d.id_docente=asi.id_docente \
+            AND a.id_alumno  = p.id_alumno \
+              AND m.id_materia = p.id_materia	\
+              AND pr.id_programa =  a.id_programa \
+              AND pr.id_facultad =  f.id_facultad	 \
+              AND p.id_gestion   =  2017 \
+              AND p.id_periodo   =  1	\
+              AND a.id_programa  =  'SIS' \
+            AND p.id_materia = asi.id_materia \
+            AND asi.id_grupo = p.id_grupo \
+            AND asi.id_gestion=p.id_gestion and asi.id_periodo=p.id_periodo \
+                    AND p.id_materia not in(8021,8022,8023,8024,8025,8026,8027,8028,8029,8030,8031,8032,8033,8034) \
+            GROUP BY f.facultad,pr.programa,p.id_materia,m.sigla,m.materia,p.id_grupo,d.nombres,d.paterno,d.materno \
+            ORDER BY m.sigla,p.id_grupo;")
+  },
+  getEstadoParciales(progra, gestion, periodo, materia, grupo){
+    return querys.select("SELECT \
+            id_materia,\
+            COUNT(case when pparcial=0 then 1 else null end)as pr1,\
+            COUNT(case when sparcial=0 then 1 else null end)as pr2,\
+            COUNT(case when tparcial=0 then 1 else null end)as pr3,\
+            COUNT(case nota_final when 0 then 1 else null end) as abandono \
+        from (\
+        SELECT DISTINCT m.id_materia, m.sigla, m.materia,a.id_alumno,n.id_grupo as id_grupo,m.nivel_academico,n.pparcial,n.sparcial,n.tparcial,\
+                      iff(n.nota > n.nota_2da,n.nota,iff(n.nota_2da > n.nota_ex_mesa,n.nota_2da,n.nota_ex_mesa)) as nota_final\
+                      FROM  alm_programas p,pln_materias m, alumnos a, alm_programaciones n\
+                      WHERE p.id_programa  =  a.id_programa\
+                      AND   a.id_alumno    =  n.id_alumno    AND   p.id_programa =  a.id_programa\
+                      AND   m.id_materia   =  n.id_materia   AND   n.id_periodo  = "+ periodo +" \
+                      AND   n.id_gestion   =  "+ gestion +"  AND   p.id_programa =  '"+ progra +"'\
+                      AND   m.id_materia   =  "+ materia +"  AND   n.id_grupo    = "+ grupo +"\
+                      GROUP BY a.id_alumno,m.id_materia, m.sigla,m.materia, n.id_grupo, n.nota,nota_final,m.nivel_academico,n.pparcial,n.sparcial,n.tparcial\
+                      ORDER BY nota_final ASC) as pr1 group by id_materia");
+  },*/
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");
