@@ -1,6 +1,7 @@
 .grid-sis{
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
+    padding-bottom: 15px;
 }
 
 .tableed{ 
@@ -33,3 +34,12 @@ td:hover {
     color: #fff;
 }
 */
+
+.grid-beca{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+table-width{
+    width: 100%;
+}

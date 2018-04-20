@@ -22,6 +22,20 @@ Template.listapos.helpers({
     },
     indexre: function(re){
         return re + 1;
-    }
+    },
+    estador: function(re){
+        switch(re){
+            case 'P' || 'C':
+                return "Aceptado";
+                break;
+            case 'R':
+                return "Rechazado";
+                break;
+            case '':
+                return "No calificado";
+                break;
+            default:
+                return "Algo va mal";
+        }
+    },
 });
-

@@ -20,6 +20,7 @@
                           <th>Academico</th>
                           <th>Total</th>
                           <th>Estado</th>
+                          <th>-</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -31,11 +32,14 @@
                                     <td>{{ sit_social }}</td>
                                     <td>{{ sit_acad }}</td>
                                     <td>{{ total }}</td>
-                                    <td>{{ estado }}</td>
+                                    <td>{{ estador estado }}</td>
+                                    <td>
+                                        <a href="{{pathFor 'calificarbal' id=id_alumno}}" type="button" class="btn btn-primary">Calificar</a>
+                                    </td>
                                 </tr>
                             {{else}}
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="8">
                                         <p>cargando</p>
                                     </td>
                                 </tr>

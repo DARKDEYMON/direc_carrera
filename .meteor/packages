@@ -32,6 +32,7 @@ aldeed:delete-button           #delete
 matb33:collection-hooks        #before and after for mongo
 momentjs:moment                #manipulacion de fechas
 arillo:flow-router-helpers     #routes render
+alanning:roles                 #roles
 
 #accounts login
 accounts-base

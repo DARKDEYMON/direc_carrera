@@ -436,6 +436,59 @@ Meteor.methods({
               AND bp.tipo_post   = 'A' \
             ORDER BY bp.estado, total DESC, nombres ASC;");
   },
+  //indicadores
+  inFamiliar(gestion){
+    return querys.select("SELECT * FROM o_bc_puntaje_familiar WHERE id_gestion = "+ gestion +" AND _estado <> 'X' ORDER BY puntaje DESC;")
+  },
+  inEconomico(gestion){
+    return querys.select("SELECT * FROM o_bc_puntaje_economico WHERE id_gestion = "+ gestion +" AND _estado <> 'X' ORDER BY puntaje DESC;")
+  },
+  inProcedencia(gestion){
+    return querys.select("SELECT * FROM o_bc_puntaje_procedencia WHERE id_gestion = "+ gestion +" AND _estado <> 'X' ORDER BY puntaje DESC;")
+  },
+  inVivienda(gestion){
+    return querys.select("SELECT * FROM o_bc_puntaje_vivienda_familiar WHERE id_gestion = "+ gestion +" AND _estado <> 'X' ORDER BY puntaje DESC;")
+  },
+  getDatPersonalesBa(ru,gestion){
+    return querys.select("SELECT 		bp.*, \
+            pro.id_programa, \
+            pro.programa, \
+            utf.id_ra, \
+            utf.nro_dip, \
+            utf.nombres, \
+            utf.paterno, \
+            utf.materno, \
+            utf.fec_nacimiento, \
+            utf.id_sexo, \
+            per.estado_civil, \
+            per.zona, \
+            per.direccion, \
+            per.telefono, \
+            per.tel_per, \
+            f.facultad \
+            FROM bc_postulantes bp \
+              LEFT OUTER JOIN alumnos       alm ON   alm.id_alumno = bp.id_alumno \
+              LEFT OUTER JOIN uatf_datos    utf ON       utf.id_ra = alm.id_ra \
+              LEFT OUTER JOIN o_bc_persona  per ON       per.id_ra = alm.id_ra \
+              LEFT OUTER JOIN alm_programas pro ON pro.id_programa = alm.id_programa \
+              LEFT OUTER JOIN alm_programas_facultades f ON f.id_facultad=pro.id_facultad \
+              WHERE bp.id_alumno = "+ ru +"   AND \
+                bp.tipo_post <> 'I' AND \
+                bp.id_gestion = "+ gestion +"   AND \
+                  bp._estado <> 'X' LIMIT 1;");
+  },
+  getAcademicoBa(ru){
+    return querys.select("SELECT 	mtr.fec_registro AS ingreso, \
+                (date_part('year',now())::integer - date_part('year',mtr.fec_registro)::integer) as permanencia, \
+                _getlastmaterias(alm.id_alumno) as materias, \
+                _getlastmatricula(alm.id_alumno) as matricula, \
+                EdadPorIdRa(alm.id_ra) as edad, \
+                binvestigacion.promedio_materias_aprobadas(alm.id_alumno) as avance, \
+                _get_anios_becasa(alm.id_alumno) as beneficio \
+                FROM alumnos alm \
+                INNER JOIN matriculas mtr on mtr.id_alumno = alm.id_alumno \
+              WHERE alm.id_alumno = "+ ru +" ORDER BY id_matricula ASC LIMIT 1;");
+  },
   /* -ofi */
   getAlumnosPg(){
     return querys.select("select DISTINCT on (uatf_datos.id_ra) * from uatf_datos INNER JOIN alumnos ON (alumnos.id_ra = uatf_datos.id_ra)  where id_programa='SIS'");

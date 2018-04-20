@@ -1,0 +1,177 @@
+<Template name="calificarbal">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <h2>Calificación de Beca Alimentacion</h2>
+            <div class="grid-beca">
+                <div>
+                    <h4>Informacion Personal</h4>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                ID RA
+                            </td>
+                            <td>
+                                {{ datpersonal.id_ra }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                CI
+                            </td>
+                            <td>
+                                {{ datpersonal.nro_dip }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Fecha de Nacimiento 
+                            </td>
+                            <td>
+                                {{ formatoFecha datpersonal.fec_nacimiento }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Nombres
+                            </td>
+                            <td>
+                                {{ datpersonal.nombres }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Apellidos
+                            </td>
+                            <td>
+                                {{ datpersonal.paterno }} {{ datpersonal.materno }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Sexo
+                            </td>
+                            <td>
+                                {{ datpersonal.id_sexo }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Estado Civil
+                            </td>
+                            <td>
+                                {{ datpersonal.estado_civil }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Direccion
+                            </td>
+                            <td>
+                                {{ datpersonal.direccion }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Telefono Personal
+                            </td>
+                            <td>
+                                {{ datpersonal.tel_per }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h4>Informacion Academica</h4>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                Facultad
+                            </td>
+                            <td>
+                                {{ datpersonal.facultad }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Carrera
+                            </td>
+                            <td>
+                                {{ datpersonal.id_programa }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Nro. de Registro Universitario
+                            </td>
+                            <td>
+                                {{ ru }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Avance Academico
+                            </td>
+                            <td>
+                                {{ datacademico.avance }}%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ingreso a Carrera
+                            </td>
+                            <td>
+                                {{ formatoFecha datacademico.ingreso }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Permanencia Carrera
+                            </td>
+                            <td>
+                                {{ datacademico.permanencia }} Años (Aprox)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Años de Beneficio
+                            </td>
+                            <td>
+                                {{ datacademico.beneficio }} Años (Aprox)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ultima Matricula
+                            </td>
+                            <td>
+                                {{ datacademico.matricula }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Materias Programadas
+                            </td>
+                            <td>
+                                {{ datacademico.materias }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            {{#autoForm collection="postulantesba" id="postali" type="insert"}}
+                {{> afQuickField name='familiar' options=ifamiliar }}
+                {{> afQuickField name='economico' options=ieconomico }}
+                {{> afQuickField name='procedencia' options=iprocedencia }}
+                {{> afQuickField name='vivienda' options=ivivienda }}
+                {{> afQuickField name='observacion' rows=6 }}
+                {{> afQuickField name='estado' }}
+                <div class="center">
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                </div>
+            {{/autoForm}}
+        </div>
+        <div></div>
+    </div>
+</Template>
