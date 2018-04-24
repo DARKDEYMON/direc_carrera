@@ -1,0 +1,55 @@
+<Template name="listviajes">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <div class="container">
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                        <label class="control-label">Periodo</label>
+                        <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
+                    </div>
+                </form>
+                <h2>Viajes por gestion y periodo</h2>         
+                    <table class="table table-bordered table-text">
+                      <thead>
+                        <tr>
+                          <th>Docente</th>
+                          <th>Materia</th>
+                          <th>Sigla</th>
+                          <th>Pasajeros</th>
+                          <th>Lugar de la practica</th>
+                          <th>Fecha de inicio</th>
+                          <th>Fecha de Finalizacion</th>
+                          <th>Aceptacion de la Empresa</th>
+                          <th>Aprobado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            {{#each viajes }}
+                                <tr>
+                                    <td>{{ nombress }}</td>
+                                    <td>{{ materia }}</td>
+                                    <td>{{ sigla }}</td>
+                                    <td>{{ pasajeros }}</td>
+                                    <td>{{ lugra_prac }}</td>
+                                    <td>{{ formatoFecha fecha_ini }}</td>
+                                    <td>{{ formatoFecha fecha_fin }}</td>
+                                    <td> <input type="checkbox" id="emp" {{ check empresa }}> </td>
+                                    <td> <input type="checkbox" id="apro" {{ check aprobado_dir }}> </td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="9">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                      </tbody>
+                    </table>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

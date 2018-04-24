@@ -64,6 +64,10 @@ Meteor.publish('uatfdatPageSearch',function(pageNumber,nPerPage,search){
 // consulta join coleccion, columna q contiene el dato para join, nombre de la columna nueva para el join, nombre en array de los datos a mostrar
 // progra.join(materias,'materias_id','materia',['name']);
 
+Meteor.publish('postulanteba',function(ru,gestion){
+  return postulantesba.find({id_alumno:Number(ru), id_gestion:Number(gestion)});
+});
+
 /*starup de meteor */
 Meteor.startup(() => {
   // code to run on server at startup
@@ -342,7 +346,6 @@ Meteor.methods({
           GROUP BY f.facultad,pr.programa,p.id_materia,m.sigla,m.materia,p.id_grupo,d.nombres,d.paterno,d.materno, est.pr1, est.pr2, est.pr3, est.abandono \
           ORDER BY m.sigla,p.id_grupo;")
   },
-  //aqui estoy
   /*
   getMateriasEstado(gestion, periodo, progra){
     return querys.select("SELECT (d.paterno||' '||d.materno||' '||d.nombres) as doc ,f.facultad, pr.programa, p.id_materia, m.sigla,m.materia, p.id_grupo, count (p.id_alumno) as total \
@@ -449,6 +452,9 @@ Meteor.methods({
   inVivienda(gestion){
     return querys.select("SELECT * FROM o_bc_puntaje_vivienda_familiar WHERE id_gestion = "+ gestion +" AND _estado <> 'X' ORDER BY puntaje DESC;")
   },
+  getNoItemsBa(progra,gestion){
+    return querys.select("SELECT * FROM balimentacion.getnroitems('"+ progra +"','"+ gestion +"','A');")
+  },
   getDatPersonalesBa(ru,gestion){
     return querys.select("SELECT 		bp.*, \
             pro.id_programa, \
@@ -488,6 +494,69 @@ Meteor.methods({
                 FROM alumnos alm \
                 INNER JOIN matriculas mtr on mtr.id_alumno = alm.id_alumno \
               WHERE alm.id_alumno = "+ ru +" ORDER BY id_matricula ASC LIMIT 1;");
+  },
+  //viajes
+  getViajes(progra, gestion, periodo){
+    return querys.select("select d.id_docente,(d.nombres||' '||d.paterno||' '||d.materno)as nombress,m.materia,m.sigla,v.pasajeros,v.lugar_prac,v.fecha_ini,v.fecha_fin, v.id_viaje,v.aprobado_dir,v.empresa \
+    from infraestructura.viajes v,dct_asignaciones a,docentes d, pln_materias m \
+    where v.id_dct_asignaciones=a.id_dct_asignaciones and a.id_programa='"+ progra +"' \
+      and a.id_gestion="+ gestion +" and a.id_periodo="+ periodo +" \
+      and a.id_docente=d.id_docente and a.id_materia=m.id_materia order by id_docente;")
+  },
+  updViageEm(id,emp){
+    //console.log("update infraestructura.viajes set empresa='"+ emp +"',fecha_control_dir=now() where id_viaje="+id);
+    return querys.update("update infraestructura.viajes set empresa='"+ emp +"',fecha_control_dir=now() where id_viaje="+id);
+  },
+  updViageDr(id,dir){
+    return querys.update("update infraestructura.viajes set aprobado_dir='"+ dir +"',fecha_control_dir=now() where id_viaje="+id)
+  },
+  //auxiliatura
+  getMateriasHabAux(progra, gestion){
+    return querys.select("SELECT \
+              DISTINCT(asg.id_materia), \
+              m.nivel_academico, \
+              m.sigla, \
+              m.materia \
+            FROM auxiliares.aux_asignaturas asg \
+              INNER JOIN pln_materias  m ON asg.id_materia = m.id_materia \
+            WHERE \
+                  m.id_programa = '"+ progra +"' \
+              AND	 asg.id_gestion = "+ gestion +" \
+              AND	 asg._estado   <> 'X'	\
+            ORDER BY m.nivel_academico, m.sigla, m.materia")
+  },
+  //aqui estoy
+  getPostulantesAux(progra, gestion, materia){
+    return querys.select("SELECT \
+            asp.id_postulante \
+          , utf.id_ra \
+          , alm.id_programa \
+          , utf.nro_dip \
+          , alm.id_alumno \
+          , utf.paterno \
+          , utf.materno \
+          , utf.nombres \
+          , plm.id_materia \
+          , plm.sigla \
+          , plm.materia \
+          , auxiliares.get_promedio('2016', '2', alm.id_alumno)::numeric(10,2) AS promedio \
+          , auxiliares.get_nota(alm.id_alumno, asp.id_materia) AS nota \
+          --, nta.id_gestion \
+          --, nta.id_gestion \
+          , asp._nota \
+          , asp._estado \
+          --, asp.* \
+          FROM auxiliares.aux_postulantes asp \
+            INNER JOIN alumnos alm        ON   alm.id_alumno  = asp.id_alumno   AND alm.estado <> 'X' \
+            INNER JOIN pln_materias  plm  ON   plm.id_materia = asp.id_materia \
+            INNER JOIN uatf_datos utf     ON   utf.id_ra      = alm.id_ra \
+          WHERE \
+                  asp._estado    <> 'X' \
+            AND alm.id_programa  = '"+ progra +"' \
+            AND asp.id_gestion   = "+ gestion +" \
+            AND asp.id_periodo   = 1 \
+            AND asp.id_materia   = "+ materia +" \
+          ORDER BY asp._nota DESC, utf.paterno , utf.materno , utf.nombres;")
   },
   /* -ofi */
   getAlumnosPg(){
@@ -574,6 +643,25 @@ querys = {
         })
     );
   },
+  update :function(query){
+    const pool = new Pool({
+      connectionString : 'postgres://postgres:postgres@localhost:5432/jachasun'
+    });
+    return Promise.await(
+      pool.connect()
+        .then(client => {
+          return client.query(query+" RETURNING *")
+          .then(res => {
+            client.release()
+            //console.log(res);
+            return res;
+          })
+          .catch(e => {
+            client.release()
+          });
+        })
+    );
+  },
   delete :function(query){
     const pool = new Pool({
       connectionString : 'postgres://postgres:123456789@localhost:5431/pruebas'
@@ -625,6 +713,18 @@ designacionDct.allow({
   } 
 });
 
+postulantesba.allow({
+  insert: function(userId, doc) {
+    //console.log(doc);
+    return !!userId;
+  }, 
+  update: function(userId) {
+    return !!userId;
+  }, 
+  remove: function(userId) {
+    return !!userId;
+  } 
+});
 /* before mongo */
 progra.after.insert(function(userId, doc){
   
@@ -657,3 +757,164 @@ progra.after.insert(function(userId, doc){
 
   progra.update(id, {$set:{postgre_id: id_po, materia_aux: mat.rows[0].materia ,sigla_aux: mat.rows[0].sigla}});
 });
+
+postulantesba.after.insert(function(userId, doc){
+  //actualisa la situcaion indicadores
+  
+  querys.update("update bc_postulantes set \
+        familiar="+ doc.familiar +", economico="+ doc.economico +", \
+        procedencia="+ doc.procedencia +", vivienda_familiar ="+ doc.vivienda_familiar +", \
+        vivienda_estudiante=0, obs='', estado='"+ doc.estado +"', _isbeca='"+ doc._isbeca +"', tipo_beca='"+ doc.tipo_beca +"' \
+        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I' ");
+  
+  sit_social = querys.select("SELECT SUM(pf.puntaje + pe.puntaje + pp.puntaje + pvf.puntaje)* 0.7 as puntaje  FROM bc_postulantes bp \
+          INNER JOIN balimentacion.o_bc_puntaje_familiar pf 		ON pf.id_p_fam = bp.familiar::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_economico pe 		ON pe.id_p_eco = bp.economico::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_procedencia pp 		ON pp.id_p_pro = bp.procedencia::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_vivienda_familiar pvf 	ON pvf.id_p_viv_f = bp.vivienda_familiar::integer \
+        WHERE \
+              bp.id_alumno  = "+ doc.id_alumno +"	\
+          AND bp.id_gestion = "+ doc.id_gestion +" \
+          AND bp.tipo_post  <> 'I';");
+
+  carrera = querys.select("SELECT b.* FROM bc_items_becas b, alumnos a WHERE \
+        b.id_gestion       = 2018 AND \
+        b.id_programa	 = a.id_programa AND \
+        b._estado 	<> 'X' AND a.id_alumno="+ doc.id_alumno +" LIMIT 1;")
+
+  pun_acad = querys.select("SELECT DISTINCT \
+            nta.id_alumno	\
+                , nta.id_gestion \
+                , nta.id_periodo \
+                , COUNT(id_materia) as total \
+                , (SELECT \
+              COUNT(*) \
+            FROM notas_planilla \
+            WHERE id_alumno = nta.id_alumno \
+              AND id_gestion = nta.id_gestion \
+              AND id_periodo = nta.id_periodo \
+              AND iff(nota_ex_mesa >=51, nota_ex_mesa, iff(nota_2da>=51, nota_2da, nota)) >=51 \
+              AND observacion <> 'C' \
+                    ) as aprobadas \
+                , _get_new_ponderacion(nta.id_alumno, nta.id_gestion, 1) as nota_current \
+          FROM notas_planilla nta \
+          WHERE \
+              nta.id_alumno   = "+ doc.id_alumno +" \
+              AND   nta.id_gestion  = "+ carrera.rows[0]._curr_id_gestion +" \
+              AND   nta.id_periodo NOT IN(3,4,5,6) \
+                AND   observacion <> 'C' \
+          GROUP BY  nta.id_alumno, nta.id_gestion, nta.id_periodo \
+          ORDER BY \
+            nta.id_gestion DESC \
+                , nta.id_periodo DESC \
+          LIMIT 1;")
+  
+  punt_acad_x = querys.select("select (sum(aprobadas)/sum(total))*15 as nota from ( \
+          SELECT nta.id_gestion,nta.id_periodo,count(nta.id_alumno) as total, nta2.aprobadas \
+          FROM       notas_planilla nta \
+          LEFT OUTER JOIN ( \
+            SELECT count(id_alumno) as aprobadas, id_gestion, id_periodo \
+              FROM notas_planilla \
+                WHERE     id_alumno =  "+ doc.id_alumno +" \
+                  AND     (iff(nota_ex_mesa>0,nota_ex_mesa,iff(nota_2da>0,nota_2da,nota)))>=51 \
+                  AND     id_gestion > '1993' \
+                  AND        observacion <> 'C' \
+                GROUP BY  id_gestion,id_periodo \
+                ORDER BY  id_gestion,id_periodo) AS nta2 ON nta2.id_gestion = nta.id_gestion AND nta2.id_periodo = nta.id_periodo \
+          WHERE      id_alumno =  "+ doc.id_alumno +" \
+            AND        nta.id_gestion > '1993' \
+            AND        nta.observacion <> 'C' \
+            AND 	   _get_vpacad(nta.id_gestion, nta.id_periodo)  <= _get_vpacad("+carrera.rows[0]._ctrl_gestion+","+ carrera.rows[0]._ctrl_periodo +")  \
+          GROUP BY   nta.id_gestion, nta.id_periodo, nta2.aprobadas \
+          ORDER BY   nta.id_gestion, nta.id_periodo) as tbl1;");
+
+  total = Number(pun_acad.rows[0].nota_current) + Number(punt_acad_x.rows[0].nota);
+
+  //actualisa situcaion academica y social
+
+  querys.update("update bc_postulantes set sit_acad="+ total +", sit_social="+ sit_social.rows[0].puntaje +" \
+                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I'");
+
+  postulantesba.update(doc._id,{$set:{sit_social: Number(sit_social.rows[0].puntaje), sit_acad: total }});
+});
+
+postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
+  //actualisa la situcaion indicadores
+  querys.update("update bc_postulantes set \
+        familiar="+ doc.familiar +", economico="+ doc.economico +", \
+        procedencia="+ doc.procedencia +", vivienda_familiar ="+ doc.vivienda_familiar +", \
+        vivienda_estudiante=0, obs='', estado='"+ doc.estado +"', _isbeca='"+ doc._isbeca +"', tipo_beca='"+ doc.tipo_beca +"' \
+        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I' ");
+  
+  sit_social = querys.select("SELECT SUM(pf.puntaje + pe.puntaje + pp.puntaje + pvf.puntaje)* 0.7 as puntaje  FROM bc_postulantes bp \
+          INNER JOIN balimentacion.o_bc_puntaje_familiar pf 		ON pf.id_p_fam = bp.familiar::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_economico pe 		ON pe.id_p_eco = bp.economico::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_procedencia pp 		ON pp.id_p_pro = bp.procedencia::integer \
+          INNER JOIN balimentacion.o_bc_puntaje_vivienda_familiar pvf 	ON pvf.id_p_viv_f = bp.vivienda_familiar::integer \
+        WHERE \
+              bp.id_alumno  = "+ doc.id_alumno +"	\
+          AND bp.id_gestion = "+ doc.id_gestion +" \
+          AND bp.tipo_post  <> 'I';");
+  
+  carrera = querys.select("SELECT b.* FROM bc_items_becas b, alumnos a WHERE \
+        b.id_gestion       = 2018 AND \
+        b.id_programa	 = a.id_programa AND \
+        b._estado 	<> 'X' AND a.id_alumno="+ doc.id_alumno +" LIMIT 1;");
+  
+  pun_acad = querys.select("SELECT DISTINCT \
+            nta.id_alumno	\
+                , nta.id_gestion \
+                , nta.id_periodo \
+                , COUNT(id_materia) as total \
+                , (SELECT \
+              COUNT(*) \
+            FROM notas_planilla \
+            WHERE id_alumno = nta.id_alumno \
+              AND id_gestion = nta.id_gestion \
+              AND id_periodo = nta.id_periodo \
+              AND iff(nota_ex_mesa >=51, nota_ex_mesa, iff(nota_2da>=51, nota_2da, nota)) >=51 \
+              AND observacion <> 'C' \
+                    ) as aprobadas \
+                , _get_new_ponderacion(nta.id_alumno, nta.id_gestion, 1) as nota_current \
+          FROM notas_planilla nta \
+          WHERE \
+              nta.id_alumno   = "+ doc.id_alumno +" \
+              AND   nta.id_gestion  = "+ carrera.rows[0]._curr_id_gestion +" \
+              AND   nta.id_periodo NOT IN(3,4,5,6) \
+                AND   observacion <> 'C' \
+          GROUP BY  nta.id_alumno, nta.id_gestion, nta.id_periodo \
+          ORDER BY \
+            nta.id_gestion DESC \
+                , nta.id_periodo DESC \
+          LIMIT 1;");
+  
+  punt_acad_x = querys.select("select (sum(aprobadas)/sum(total))*15 as nota from ( \
+          SELECT nta.id_gestion,nta.id_periodo,count(nta.id_alumno) as total, nta2.aprobadas \
+          FROM       notas_planilla nta \
+          LEFT OUTER JOIN ( \
+            SELECT count(id_alumno) as aprobadas, id_gestion, id_periodo \
+              FROM notas_planilla \
+                WHERE     id_alumno =  "+ doc.id_alumno +" \
+                  AND     (iff(nota_ex_mesa>0,nota_ex_mesa,iff(nota_2da>0,nota_2da,nota)))>=51 \
+                  AND     id_gestion > '1993' \
+                  AND        observacion <> 'C' \
+                GROUP BY  id_gestion,id_periodo \
+                ORDER BY  id_gestion,id_periodo) AS nta2 ON nta2.id_gestion = nta.id_gestion AND nta2.id_periodo = nta.id_periodo \
+          WHERE      id_alumno =  "+ doc.id_alumno +" \
+            AND        nta.id_gestion > '1993' \
+            AND        nta.observacion <> 'C' \
+            AND 	   _get_vpacad(nta.id_gestion, nta.id_periodo)  <= _get_vpacad("+carrera.rows[0]._ctrl_gestion+","+ carrera.rows[0]._ctrl_periodo +")  \
+          GROUP BY   nta.id_gestion, nta.id_periodo, nta2.aprobadas \
+          ORDER BY   nta.id_gestion, nta.id_periodo) as tbl1;");
+  
+  total = Number(pun_acad.rows[0].nota_current) + Number(punt_acad_x.rows[0].nota);
+  console.log(total);
+  //actualisa situcaion academica y social
+  
+  querys.update("update bc_postulantes set sit_acad="+ total +", sit_social="+ sit_social.rows[0].puntaje +" \
+                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I'");
+  //verificar del todo
+  if(modifier.$set.sit_social===undefined&&modifier.$set.sit_acad===undefined)
+    postulantesba.update(doc._id,{$set:{sit_social: Number(sit_social.rows[0].puntaje), sit_acad: total }});
+}, {fetchPrevious: false});
+//update select * from bc_postulantes where id_alumno=78096 and id_gestion=2018;

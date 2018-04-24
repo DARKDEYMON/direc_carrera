@@ -1,5 +1,5 @@
 Template.calificarbal.onCreated(function(){
-    this.gestion = new ReactiveVar(new Date().getFullYear());
+    this.gestion = new ReactiveVar(FlowRouter.getParam('ges'));
     this.ifamiliar = new ReactiveVar([]);
     this.ieconomico = new ReactiveVar([]);
     this.iprocedencia = new ReactiveVar([]);
@@ -15,6 +15,7 @@ Template.calificarbal.onCreated(function(){
             return
         }
         */
+        Meteor.subscribe('postulanteba', self.id, self.gestion.get());
         Meteor.call('inFamiliar', self.gestion.get(),(error, result)=>{
             return self.ifamiliar.set(result.rows);
         });
@@ -66,7 +67,26 @@ Template.calificarbal.helpers({
     formatoFecha: function(dat){
         return moment(dat).format('MMM D, YYYY')
     },
+    estCivil: function(dat){
+        if(dat===0)
+            return "Soltero(a)";
+        else
+            return "Casado(a)";
+    },
     ru:function(){
         return FlowRouter.getParam('id');
+    },
+    gestion:function(){
+        return FlowRouter.getParam('ges');
+    },
+    //mongo
+    existeMongo(){
+        if(postulantesba.find().count()>0)
+            return true;
+        else
+            return false;
+    },
+    docMongo(){
+        return postulantesba.findOne();
     }
 });

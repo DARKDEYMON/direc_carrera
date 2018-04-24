@@ -1,5 +1,6 @@
 Template.listapos.onCreated(function(){
     this.listapos = new ReactiveVar([]);
+    this.nroitems = new ReactiveVar({});
     this.gestion = new ReactiveVar(new Date().getFullYear());
     self = this;
     self.autorun(function(){
@@ -9,6 +10,9 @@ Template.listapos.onCreated(function(){
         }
         Meteor.call('getPostulantes', user.profile.carrera, self.gestion.get(), (error, result)=>{
             return self.listapos.set(result.rows);
+        });
+        Meteor.call('getNoItemsBa',user.profile.carrera, self.gestion.get(), (error, result)=>{
+            return self.nroitems.set(result.rows[0]);
         });
     });
 });
@@ -38,4 +42,25 @@ Template.listapos.helpers({
                 return "Algo va mal";
         }
     },
+    conbeca(re){
+        var nro = re+1;
+        var can = Number(Template.instance().nroitems.get().id_items);
+        if(nro<=can)
+            return "SI"
+        else
+            return "NO"
+    }
+});
+
+Template.listapos.events({ 
+    'change .gest': function(event, template) { 
+        var gestion = Number(document.getElementById("gestion").value);
+        Template.instance().gestion.set(gestion);
+        return;
+    },
+    'click #res': function(event, template){
+        var progra = Meteor.user().profile.carrera;
+        var ges = Template.instance().gestion.get();
+        window.open("http://10.10.165.134:8080/pentaho/api/repos/:public:Steel%20Wheels:becali.prpt/generatedContent?programa="+progra+"&gestion="+ges+"&output-target=pageable/pdf&userid=admin&password=password")
+    }
 });

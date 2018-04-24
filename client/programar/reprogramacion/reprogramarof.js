@@ -82,6 +82,9 @@ Template.programarofof.helpers({
         //console.log(Template.instance().showform.get('showform')+"aqui");
         return Template.instance().showform.get('showform');
     },
+    getMateria(dat){
+        return Number(dat.materias_id)
+    }
 });
 
 Template.programarofof.events({ 

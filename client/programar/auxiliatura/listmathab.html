@@ -1,4 +1,4 @@
-<Template name="listapos">
+<Template name="listmathab">
     <div class="grid-sis">
         <div></div>
         <div>
@@ -9,42 +9,31 @@
                         <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
                     </div>
                 </form>
-                <h2>Lista de Postulantes Beca Alimentacion</h2>
-                <button type="button" class="btn btn-default btn-lg" id="res">
-                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Resultados
-                </button>      
+                <h2>Lista de Materias para Auxiliatura/Seleccione una Materia</h2>     
                     <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>N°</th>
-                          <th>RU</th>
-                          <th>Nombre Completo</th>
-                          <th>Social</th>
-                          <th>Academico</th>
-                          <th>Total</th>
-                          <th>Estado</th>
-                          <th>Becado</th>
+                          <th>Nivel Academico</th>
+                          <th>Sigla</th>
+                          <th>Materia</th>
                           <th>-</th>
                         </tr>
                       </thead>
                       <tbody>
-                            {{#each listapos }}
+                            {{#each materiashab }}
                                 <tr>
                                     <td>{{ indexre @index }}</td>
-                                    <td>{{ id_alumno }}</td>
-                                    <td>{{ nombres }}</td>
-                                    <td>{{ sit_social }}</td>
-                                    <td>{{ sit_acad }}</td>
-                                    <td>{{ total }}</td>
-                                    <td>{{ estador estado }}</td>
-                                    <td>{{ conbeca @index }}</td>
+                                    <td>{{ nivel_academico }}</td>
+                                    <td>{{ sigla }}</td>
+                                    <td>{{ materia }}</td>
                                     <td>
-                                        <a href="{{pathFor 'calificarbal' id=id_alumno ges=gestion }}" type="button" class="btn btn-primary">Calificar</a>
+                                        <a href="" type="button" class="btn btn-primary">Habilitados</a>
                                     </td>
                                 </tr>
                             {{else}}
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="4">
                                         <p>cargando</p>
                                     </td>
                                 </tr>

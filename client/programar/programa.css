@@ -40,6 +40,6 @@ td:hover {
     grid-template-columns: 1fr 1fr;
 }
 
-table-width{
-    width: 100%;
+.table-text{
+    font-size: 11px;
 }
