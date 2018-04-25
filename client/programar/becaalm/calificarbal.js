@@ -90,3 +90,11 @@ Template.calificarbal.helpers({
         return postulantesba.findOne();
     }
 });
+
+AutoForm.hooks({
+    postali:{
+        onSuccess: function(formType, result){
+            FlowRouter.go('listapos');
+        }
+    }
+});

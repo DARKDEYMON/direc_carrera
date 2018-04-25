@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { WSASYSCALLFAILURE } from 'constants';
 
 Postgres = require('promised-postgres');
 const { Pool, Client } = require('pg')
@@ -66,6 +67,10 @@ Meteor.publish('uatfdatPageSearch',function(pageNumber,nPerPage,search){
 
 Meteor.publish('postulanteba',function(ru,gestion){
   return postulantesba.find({id_alumno:Number(ru), id_gestion:Number(gestion)});
+});
+
+Meteor.publish('postulantebaux',function(gestion,materia,ru){
+  return postulantesaux.find({id_alumno:ru, id_materia:materia, id_gestion:gestion});
 });
 
 /*starup de meteor */
@@ -525,7 +530,6 @@ Meteor.methods({
               AND	 asg._estado   <> 'X'	\
             ORDER BY m.nivel_academico, m.sigla, m.materia")
   },
-  //aqui estoy
   getPostulantesAux(progra, gestion, materia){
     return querys.select("SELECT \
             asp.id_postulante \
@@ -539,13 +543,10 @@ Meteor.methods({
           , plm.id_materia \
           , plm.sigla \
           , plm.materia \
-          , auxiliares.get_promedio('2016', '2', alm.id_alumno)::numeric(10,2) AS promedio \
+          , auxiliares.get_promedio('"+ (Number(gestion)-1) +"', '2', alm.id_alumno)::numeric(10,2) AS promedio \
           , auxiliares.get_nota(alm.id_alumno, asp.id_materia) AS nota \
-          --, nta.id_gestion \
-          --, nta.id_gestion \
           , asp._nota \
           , asp._estado \
-          --, asp.* \
           FROM auxiliares.aux_postulantes asp \
             INNER JOIN alumnos alm        ON   alm.id_alumno  = asp.id_alumno   AND alm.estado <> 'X' \
             INNER JOIN pln_materias  plm  ON   plm.id_materia = asp.id_materia \
@@ -557,6 +558,43 @@ Meteor.methods({
             AND asp.id_periodo   = 1 \
             AND asp.id_materia   = "+ materia +" \
           ORDER BY asp._nota DESC, utf.paterno , utf.materno , utf.nombres;")
+  },
+  /*
+  getPostulanteAux(progra, gestion, materia, ru){
+    return querys.select("SELECT \
+            asp.id_postulante \
+          , utf.id_ra \
+          , alm.id_programa \
+          , utf.nro_dip \
+          , alm.id_alumno \
+          , utf.paterno \
+          , utf.materno \
+          , utf.nombres \
+          , plm.id_materia \
+          , plm.sigla \
+          , plm.materia \
+          , auxiliares.get_promedio('"+ (Number(gestion)-1) +"', '2', alm.id_alumno)::numeric(10,2) AS promedio \
+          , auxiliares.get_nota(alm.id_alumno, asp.id_materia) AS nota \
+          , asp._nota \
+          , asp._estado \
+          FROM auxiliares.aux_postulantes asp \
+            INNER JOIN alumnos alm        ON   alm.id_alumno  = asp.id_alumno   AND alm.estado <> 'X' \
+            INNER JOIN pln_materias  plm  ON   plm.id_materia = asp.id_materia \
+            INNER JOIN uatf_datos utf     ON   utf.id_ra      = alm.id_ra \
+          WHERE \
+                  asp._estado    <> 'X' \
+            AND alm.id_programa  = '"+ progra +"' \
+            AND asp.id_gestion   = "+ gestion +" \
+            AND asp.id_periodo   = 1 \
+            AND asp.id_materia   = "+ materia +" \
+        AND asp.id_postulante = "+ ru +" \
+          ORDER BY asp._nota DESC, utf.paterno , utf.materno , utf.nombres;")
+  },
+  */
+  //verano
+  //aqui estoy
+  getMateriasVerano(progra, malla, gestion){
+    return querys.select("select r_sigla, r_materia,r_id_materia,r_nivel_academico,r_metodo_normal from  consola.director_malla_curricular('"+ progra +"',"+ malla +","+ gestion +",3)")
   },
   /* -ofi */
   getAlumnosPg(){
@@ -725,13 +763,28 @@ postulantesba.allow({
     return !!userId;
   } 
 });
+
+postulantesaux.allow({
+  insert: function(userId, doc) {
+    //console.log(doc);
+    return !!userId;
+  }, 
+  update: function(userId) {
+    return !!userId;
+  }, 
+  remove: function(userId) {
+    return !!userId;
+  } 
+});
 /* before mongo */
 progra.after.insert(function(userId, doc){
   
   id=doc._id.toString();
-  //console.log(id);
   //console.log(progra.find({_id:id}).fetch());
-  
+
+  //estoy aqui
+  //vuscar y borrar si algo ya existe en la otra base de datos
+
   var inser = "insert into academico.alm_programaciones ( \
         id_alumno, \
         id_materia, \
@@ -908,7 +961,7 @@ postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
           ORDER BY   nta.id_gestion, nta.id_periodo) as tbl1;");
   
   total = Number(pun_acad.rows[0].nota_current) + Number(punt_acad_x.rows[0].nota);
-  console.log(total);
+  //console.log(total);
   //actualisa situcaion academica y social
   
   querys.update("update bc_postulantes set sit_acad="+ total +", sit_social="+ sit_social.rows[0].puntaje +" \
@@ -917,4 +970,11 @@ postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
   if(modifier.$set.sit_social===undefined&&modifier.$set.sit_acad===undefined)
     postulantesba.update(doc._id,{$set:{sit_social: Number(sit_social.rows[0].puntaje), sit_acad: total }});
 }, {fetchPrevious: false});
-//update select * from bc_postulantes where id_alumno=78096 and id_gestion=2018;
+
+postulantesaux.after.insert(function(userId, doc){
+  //update auxiliares.aux_postulantes set _nota='' and estado='' where id_alumno=123 and id_materia=123 and id_gestion=123;
+});
+
+postulantesaux.after.update(function(userId, doc, fieldNames, modifier, options){
+  //update auxiliares.aux_postulantes set _nota='' and estado='' where id_alumno=123 and id_materia=123 and id_gestion=123;
+},{fetchPrevious: false});

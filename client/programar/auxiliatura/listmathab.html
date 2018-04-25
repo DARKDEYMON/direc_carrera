@@ -28,7 +28,7 @@
                                     <td>{{ sigla }}</td>
                                     <td>{{ materia }}</td>
                                     <td>
-                                        <a href="" type="button" class="btn btn-primary">Habilitados</a>
+                                        <a href="{{ pathFor 'listhabaux' ges=gestion matid=id_materia }}" type="button" class="btn btn-primary">Habilitados</a>
                                     </td>
                                 </tr>
                             {{else}}
