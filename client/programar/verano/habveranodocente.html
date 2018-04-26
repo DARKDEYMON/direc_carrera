@@ -1,0 +1,18 @@
+<Template name="habveranodocente">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <h3>Elejir Docente</h3>
+            {{#autoForm collection="designacionDct" id="habverano" type="insert"}}
+                {{> afQuickField name='id_docente' options=docentes }}
+                {{> afQuickField name='id_materia' type="hidden" value=materia }}
+                {{> afQuickField name='id_gestion' type="hidden" value=gestion }}
+                {{> afQuickField name='id_periodo' type="hidden" value=3 }}
+                <div class="center">
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                </div>
+            {{/autoForm}}
+        </div>
+        <div></div>
+    </div>
+</Template>

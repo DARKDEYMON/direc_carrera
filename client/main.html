@@ -8,13 +8,6 @@
     <div>
       {{> Template.dynamic template=body}}
     </div>
-    <div class="grid-sis">
-      <div></div>
-      <div>
-        
-      </div>
-      <div></div>
-    </div>
 
   </body>
 
@@ -25,11 +18,27 @@
         <div class="container-fluid">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="/">Directores</a>
           </div>
       
           <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div class="collapse navbar-collapse" id="navbar">
+
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Postulantes <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{pathFor 'listapostulantes'}}">Lista de Postulantes</a></li>
+                </ul>
+              </li>
+            </ul>
+
             <ul class="nav navbar-nav">
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reprogramacion <span class="caret"></span></a>
@@ -43,6 +52,7 @@
                 </ul>
               </li>
             </ul>
+
             <ul class="nav navbar-nav">
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Estadisticas <span class="caret"></span></a>
@@ -73,6 +83,18 @@
                   </ul>
                 </li>
               </ul>
+              
+              <ul class="nav navbar-nav">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Verano <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="{{pathFor 'habverano'}}">Havilitar Materias</a></li>
+                      <!---<li><a href="{{pathFor 'matriculados'}}">Matriculados</a></li>
+                      <li><a href="{{pathFor 'listdocentes'}}">Designacion Docente</a></li>
+                      <li><a href="{{pathFor 'listmore'}}">Lista dat</a></li>-->
+                    </ul>
+                  </li>
+                </ul>
 
             <ul class="nav navbar-nav">
                 <li class="dropdown">

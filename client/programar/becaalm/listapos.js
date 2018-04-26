@@ -2,13 +2,14 @@ Template.listapos.onCreated(function(){
     this.listapos = new ReactiveVar([]);
     this.nroitems = new ReactiveVar({});
     this.gestion = new ReactiveVar(new Date().getFullYear());
+    this.periodo = new ReactiveVar(1);
     self = this;
     self.autorun(function(){
         user = Meteor.user();
         if(!user){
             return
         }
-        Meteor.call('getPostulantes', user.profile.carrera, self.gestion.get(), (error, result)=>{
+        Meteor.call('getPostulantes', user.profile.carrera, self.gestion.get(), self.periodo.get(), (error, result)=>{
             return self.listapos.set(result.rows);
         });
         Meteor.call('getNoItemsBa',user.profile.carrera, self.gestion.get(), (error, result)=>{
@@ -23,6 +24,9 @@ Template.listapos.helpers({
     },
     gestion: function(){
         return Template.instance().gestion.get();
+    },
+    periodo: function(){
+        return Template.instance().periodo.get();
     },
     indexre: function(re){
         return re + 1;
@@ -56,6 +60,8 @@ Template.listapos.events({
     'change .gest': function(event, template) { 
         var gestion = Number(document.getElementById("gestion").value);
         Template.instance().gestion.set(gestion);
+        var periodo = Number(document.getElementById("periodo").value);
+        Template.instance().periodo.set(periodo);
         return;
     },
     'click #res': function(event, template){

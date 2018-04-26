@@ -1,8 +1,7 @@
-<Template name="listapos">
+<Template name="listapostulantes">
     <div class="grid-sis">
         <div></div>
         <div>
-            <div class="container">
                 <form class="form-group gest" data-required="true" method="">     
                     <div class="form-group" data-required="true">
                         <label class="control-label">Gestion</label>
@@ -11,49 +10,46 @@
                         <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
                     </div>
                 </form>
-                <h2>Lista de Postulantes Beca Alimentacion</h2>
-                <button type="button" class="btn btn-default btn-lg" id="res">
-                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Resultados
-                </button>      
+                <div class="container">
+                    <h2>Lista de Postulantes</h2>  
+                    <input type="text" class="form-control search"  placeholder="Buscar por CI...">       
                     <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>N°</th>
-                          <th>RU</th>
-                          <th>Nombre Completo</th>
-                          <th>Social</th>
-                          <th>Academico</th>
-                          <th>Total</th>
+                          <th>C.I.</th>
+                          <th>Paterno</th>
+                          <th>materno</th>
+                          <th>Nombres</th>
+                          <th>Tipo de Examen</th>
                           <th>Estado</th>
-                          <th>Becado</th>
-                          <th>-</th>
                         </tr>
                       </thead>
                       <tbody>
-                            {{#each listapos }}
+                          
+                            {{#each postulantes }}
                                 <tr>
                                     <td>{{ indexre @index }}</td>
-                                    <td>{{ id_alumno }}</td>
+                                    <td>{{ nro_dip }}</td>
+                                    <td>{{ paterno }}</td>
+                                    <td>{{ materno  }}</td>
                                     <td>{{ nombres }}</td>
-                                    <td>{{ sit_social }}</td>
-                                    <td>{{ sit_acad }}</td>
-                                    <td>{{ total }}</td>
-                                    <td>{{ estador estado }}</td>
-                                    <td>{{ conbeca @index }}</td>
-                                    <td>
-                                        <a href="{{pathFor 'calificarbal' id=id_alumno ges=gestion peri=periodo }}" type="button" class="btn btn-primary">Calificar</a>
-                                    </td>
+                                    <td>{{ examen }}</td>
+                                    <td>{{ obs }}</td>
                                 </tr>
                             {{else}}
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="7">
                                         <p>cargando</p>
                                     </td>
                                 </tr>
                             {{/each}}
                       </tbody>
                     </table>
-            </div>
+                </div>
+                <div class="center">
+                    <button class="btn btn-primary dispmore">Ver mas</button>
+                </div>
         </div>
         <div></div>
     </div>

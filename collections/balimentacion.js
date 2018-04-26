@@ -29,6 +29,11 @@ postulantesbaSchema = new SimpleSchema({
         label: "Gestion",
         optional: false
     },
+    id_periodo:{
+        type: Number,
+        label:"Periodo",
+        optional: false
+    },
     familiar:{
         type: Number,
         label: "Grupo Familiar",

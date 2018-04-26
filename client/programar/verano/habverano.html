@@ -1,0 +1,47 @@
+<Template name="habverano">
+    <div class="grid-sis">
+        <div></div>
+        <div>
+            <div class="container">
+                <form class="form-group gest" data-required="true" method="">     
+                    <div class="form-group" data-required="true">
+                        <label class="control-label">Gestion</label>
+                        <input type="text" required class="form-control" id="gestion" name ="gestion" value="{{ gestion }}" autocomplete="off"  placeholder="Gestion">
+                    </div>
+                </form>
+                <h2>Habilitar Materias Verano</h2>     
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>N°</th>
+                          <th>Nivel Academico</th>
+                          <th>Sigla</th>
+                          <th>Materia</th>
+                          <th>-</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                            {{#each materiasv }}
+                                <tr>
+                                    <td>{{ indexre @index }}</td>
+                                    <td>{{ r_nivel_academico }}</td>
+                                    <td>{{ r_sigla }}</td>
+                                    <td>{{ r_materia }}</td>
+                                    <td>
+                                        <a href="{{pathFor 'habveranodocente' mat=r_id_materia ges=gestion }}" type="button" class="btn btn-primary">Habilitar</a>
+                                    </td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="6">
+                                        <p>cargando</p>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                      </tbody>
+                    </table>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</Template>

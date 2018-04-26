@@ -69,8 +69,8 @@ Meteor.publish('postulanteba',function(ru,gestion){
   return postulantesba.find({id_alumno:Number(ru), id_gestion:Number(gestion)});
 });
 
-Meteor.publish('postulantebaux',function(gestion,materia,ru){
-  return postulantesaux.find({id_alumno:ru, id_materia:materia, id_gestion:gestion});
+Meteor.publish('postulantebaux',function(gestion,materia,ru, periodo){
+  return postulantesaux.find({id_alumno: Number(ru), id_materia:Number(materia), id_gestion:Number(gestion), id_periodo:Number(periodo)});
 });
 
 /*starup de meteor */
@@ -407,7 +407,7 @@ Meteor.methods({
           GROUP BY f.facultad,pr.programa,p.id_materia,m.sigla,m.materia,p.id_grupo,d.nombres,d.paterno,d.materno,d.ci,d.email,d.telefono_per")
   },
   //alimentacion
-  getPostulantes(progra, gestion){
+  getPostulantes(progra, gestion, periodo){
     return querys.select("SELECT 	\
                 utf.nro_dip \
               , bp.id_alumno \
@@ -441,6 +441,7 @@ Meteor.methods({
             WHERE \
                 alm.id_programa = '"+ progra +"' \
               AND bp.id_gestion  = "+ gestion +" \
+              AND bp.id_periodo = "+ periodo +" \
               AND bp.tipo_post   = 'A' \
             ORDER BY bp.estado, total DESC, nombres ASC;");
   },
@@ -530,7 +531,17 @@ Meteor.methods({
               AND	 asg._estado   <> 'X'	\
             ORDER BY m.nivel_academico, m.sigla, m.materia")
   },
-  getPostulantesAux(progra, gestion, materia){
+  getPostulantesAux(progra, gestion, materia, periodo){
+    gestion = Number(gestion);
+    periodo = Number(periodo);
+    if(periodo-1<=0){
+      periodop=2;
+      gestionp= gestion -1;
+    }else{
+      gestionp = gestion;
+      periodop=periodo-1;
+    }
+    console.log(gestion+" "+periodo);
     return querys.select("SELECT \
             asp.id_postulante \
           , utf.id_ra \
@@ -543,7 +554,7 @@ Meteor.methods({
           , plm.id_materia \
           , plm.sigla \
           , plm.materia \
-          , auxiliares.get_promedio('"+ (Number(gestion)-1) +"', '2', alm.id_alumno)::numeric(10,2) AS promedio \
+          , auxiliares.get_promedio('"+ gestionp +"', '"+ periodop +"', alm.id_alumno)::numeric(10,2) AS promedio \
           , auxiliares.get_nota(alm.id_alumno, asp.id_materia) AS nota \
           , asp._nota \
           , asp._estado \
@@ -555,11 +566,10 @@ Meteor.methods({
                   asp._estado    <> 'X' \
             AND alm.id_programa  = '"+ progra +"' \
             AND asp.id_gestion   = "+ gestion +" \
-            AND asp.id_periodo   = 1 \
+            AND asp.id_periodo   = "+ periodo +" \
             AND asp.id_materia   = "+ materia +" \
           ORDER BY asp._nota DESC, utf.paterno , utf.materno , utf.nombres;")
   },
-  /*
   getPostulanteAux(progra, gestion, materia, ru){
     return querys.select("SELECT \
             asp.id_postulante \
@@ -590,11 +600,84 @@ Meteor.methods({
         AND asp.id_postulante = "+ ru +" \
           ORDER BY asp._nota DESC, utf.paterno , utf.materno , utf.nombres;")
   },
-  */
   //verano
-  //aqui estoy
   getMateriasVerano(progra, malla, gestion){
     return querys.select("select r_sigla, r_materia,r_id_materia,r_nivel_academico,r_metodo_normal from  consola.director_malla_curricular('"+ progra +"',"+ malla +","+ gestion +",3)")
+  },
+  getProgramaActual(progra){
+    return querys.select("select id_plan from alm_programas where id_programa='"+ progra +"';");
+  },
+  getDocentesVerano(progra){
+    return querys.select("select distinct (a.id_docente),d.nombres,d.paterno,d.materno from dct_asignaciones a,docentes d \
+        where a.id_programa='"+ progra +"' and a.id_gestion=2014 and a.id_periodo=1 and a.id_docente=d.id_docente order by nombres")
+  },
+  //postulantes
+  getTiposAdmicion(progra, gestion, periodo){
+    return querys.select("SELECT pex.id_examen, pex.examen FROM prs_examen pex \
+          INNER JOIN alm_modalidad alm ON alm.id_examen = pex.id_examen \
+        WHERE alm._estado <> 'ANULADO' AND alm.id_programa = '"+ progra +"' AND alm.id_gestion = "+ gestion +" AND id_periodo = "+ periodo +" \
+        ORDER BY pex.peso;")
+  },
+  getAlumAdmincion(progra, gestion, periodo, idexam){
+    if(idexam==='')
+      return querys.select("SELECT pos.examen as examen1 ,prs.examen, utf.nro_dip, utf.paterno, utf.materno, utf.nombres, pos.obs FROM postulantes pos \
+              INNER JOIN uatf_datos utf ON utf.id_ra = pos.id_ra \
+              INNER JOIN prs_examen prs ON prs.id_examen = pos.examen \
+          WHERE 	    pos.id_programa = '"+ progra +"' \
+              AND pos.id_gestion = "+ gestion +" \
+              AND pos.id_periodo = "+ periodo +" \
+              AND pos._estado <> 'X' \
+          ORDER BY prs.examen, utf.paterno, utf.materno, utf.nombres")
+    else
+      return querys.select("SELECT pos.examen as examen1 ,prs.examen, utf.nro_dip, utf.paterno, utf.materno, utf.nombres, pos.obs FROM postulantes pos \
+            INNER JOIN uatf_datos utf ON utf.id_ra = pos.id_ra \
+            INNER JOIN prs_examen prs ON prs.id_examen = pos.examen \
+        WHERE 	    pos.id_programa = '"+ progra +"' \
+            AND pos.id_gestion = "+ gestion +" \
+            AND pos.id_periodo = "+ periodo +" \
+            AND pos.examen     = "+ idexam +" \
+            AND pos._estado <> 'X' \
+        ORDER BY prs.examen, utf.paterno, utf.materno, utf.nombres")
+  },
+  getLlenadoNotas(progra, gestion, periodo, idexam){
+    return querys.select("SELECT 	  prs.examen \
+          , utf.nro_dip \
+          , utf.paterno \
+          , utf.materno \
+          , utf.nombres \
+          , pos.nota \
+          , consola.get_literal_number(pos.nota) as nliteral \
+          , ali.nota_minima \
+          , alm.nro_aceptados \
+          , (SELECT alf.facultad FROM alm_programas_facultades alf \
+              INNER JOIN alm_programas alp ON alf.id_facultad = alp.id_facultad \
+            WHERE alp.id_programa = pos.id_programa LIMIT 1 \
+            ) as facultad \
+          , CASE WHEN pos.nota >= ali.nota_minima \
+            THEN 'ADMITIDO' \
+              WHEN pos.nota > 0 and pos.nota < ali.nota_minima \
+            THEN 'NO ADMITIDO' \
+              WHEN pos.nota = 0 \
+            THEN 'NO SE PRESENTO'	\
+            END AS obs \
+        FROM postulantes pos \
+          INNER JOIN uatf_datos utf ON utf.id_ra = pos.id_ra \
+          INNER JOIN prs_examen prs ON prs.id_examen = pos.examen \
+          LEFT OUTER JOIN alm_programas_ingreso ali ON ali.id_programa = pos.id_programa \
+                      AND ali.id_gestion = pos.id_gestion \
+                      AND ali.id_periodo = pos.id_periodo \
+                      AND  ali.id_examen = pos.examen	\
+          LEFT OUTER JOIN alm_modalidad alm ON alm.id_programa = pos.id_programa \
+                      AND alm.id_gestion = pos.id_gestion \
+                      AND alm.id_periodo = pos.id_periodo \
+                      AND  alm.id_examen = pos.examen \
+        WHERE 	    pos.id_programa = '"+ progra+"' \
+          AND pos.id_gestion = "+ gestion +" \
+          AND pos.id_periodo = "+ periodo +" \
+          AND pos.examen     = "+ idexam +" \
+          AND alm._estado <> 'ANULADO' \
+          AND pos._estado <> 'X' \
+        ORDER BY pos.nota DESC, prs.examen, utf.paterno, utf.materno, utf.nombres")
   },
   /* -ofi */
   getAlumnosPg(){
@@ -725,10 +808,10 @@ querys = {
 progra.allow({
   insert: function(userId, doc) {
       //console.log(doc);
-      return true; 
+      return !!userId; 
   }, 
-  update: function() {
-      return true;
+  update: function(userId) {
+      return !!userId;
   }, 
   remove: function(userId, doc) {
       //console.log(doc);
@@ -818,7 +901,7 @@ postulantesba.after.insert(function(userId, doc){
         familiar="+ doc.familiar +", economico="+ doc.economico +", \
         procedencia="+ doc.procedencia +", vivienda_familiar ="+ doc.vivienda_familiar +", \
         vivienda_estudiante=0, obs='', estado='"+ doc.estado +"', _isbeca='"+ doc._isbeca +"', tipo_beca='"+ doc.tipo_beca +"' \
-        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I' ");
+        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo ="+ doc.id_periodo +" AND tipo_post <> 'I' ");
   
   sit_social = querys.select("SELECT SUM(pf.puntaje + pe.puntaje + pp.puntaje + pvf.puntaje)* 0.7 as puntaje  FROM bc_postulantes bp \
           INNER JOIN balimentacion.o_bc_puntaje_familiar pf 		ON pf.id_p_fam = bp.familiar::integer \
@@ -831,7 +914,7 @@ postulantesba.after.insert(function(userId, doc){
           AND bp.tipo_post  <> 'I';");
 
   carrera = querys.select("SELECT b.* FROM bc_items_becas b, alumnos a WHERE \
-        b.id_gestion       = 2018 AND \
+        b.id_gestion       = "+ doc.id_gestion +" AND \
         b.id_programa	 = a.id_programa AND \
         b._estado 	<> 'X' AND a.id_alumno="+ doc.id_alumno +" LIMIT 1;")
 
@@ -882,22 +965,23 @@ postulantesba.after.insert(function(userId, doc){
           ORDER BY   nta.id_gestion, nta.id_periodo) as tbl1;");
 
   total = Number(pun_acad.rows[0].nota_current) + Number(punt_acad_x.rows[0].nota);
-
+  //console.log(total);
   //actualisa situcaion academica y social
 
   querys.update("update bc_postulantes set sit_acad="+ total +", sit_social="+ sit_social.rows[0].puntaje +" \
-                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I'");
+                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo ="+ doc.id_periodo +" AND tipo_post <> 'I'");
 
   postulantesba.update(doc._id,{$set:{sit_social: Number(sit_social.rows[0].puntaje), sit_acad: total }});
 });
 
 postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
   //actualisa la situcaion indicadores
+  
   querys.update("update bc_postulantes set \
         familiar="+ doc.familiar +", economico="+ doc.economico +", \
         procedencia="+ doc.procedencia +", vivienda_familiar ="+ doc.vivienda_familiar +", \
         vivienda_estudiante=0, obs='', estado='"+ doc.estado +"', _isbeca='"+ doc._isbeca +"', tipo_beca='"+ doc.tipo_beca +"' \
-        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I' ");
+        where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo ="+ doc.id_periodo +" AND tipo_post <> 'I' ");
   
   sit_social = querys.select("SELECT SUM(pf.puntaje + pe.puntaje + pp.puntaje + pvf.puntaje)* 0.7 as puntaje  FROM bc_postulantes bp \
           INNER JOIN balimentacion.o_bc_puntaje_familiar pf 		ON pf.id_p_fam = bp.familiar::integer \
@@ -908,12 +992,12 @@ postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
               bp.id_alumno  = "+ doc.id_alumno +"	\
           AND bp.id_gestion = "+ doc.id_gestion +" \
           AND bp.tipo_post  <> 'I';");
-  
+
   carrera = querys.select("SELECT b.* FROM bc_items_becas b, alumnos a WHERE \
-        b.id_gestion       = 2018 AND \
+        b.id_gestion       = "+ doc.id_gestion +" AND \
         b.id_programa	 = a.id_programa AND \
-        b._estado 	<> 'X' AND a.id_alumno="+ doc.id_alumno +" LIMIT 1;");
-  
+        b._estado 	<> 'X' AND a.id_alumno="+ doc.id_alumno +" LIMIT 1;")
+
   pun_acad = querys.select("SELECT DISTINCT \
             nta.id_alumno	\
                 , nta.id_gestion \
@@ -939,7 +1023,7 @@ postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
           ORDER BY \
             nta.id_gestion DESC \
                 , nta.id_periodo DESC \
-          LIMIT 1;");
+          LIMIT 1;")
   
   punt_acad_x = querys.select("select (sum(aprobadas)/sum(total))*15 as nota from ( \
           SELECT nta.id_gestion,nta.id_periodo,count(nta.id_alumno) as total, nta2.aprobadas \
@@ -959,13 +1043,13 @@ postulantesba.after.update(function(userId, doc, fieldNames, modifier, options){
             AND 	   _get_vpacad(nta.id_gestion, nta.id_periodo)  <= _get_vpacad("+carrera.rows[0]._ctrl_gestion+","+ carrera.rows[0]._ctrl_periodo +")  \
           GROUP BY   nta.id_gestion, nta.id_periodo, nta2.aprobadas \
           ORDER BY   nta.id_gestion, nta.id_periodo) as tbl1;");
-  
+
   total = Number(pun_acad.rows[0].nota_current) + Number(punt_acad_x.rows[0].nota);
   //console.log(total);
   //actualisa situcaion academica y social
-  
+
   querys.update("update bc_postulantes set sit_acad="+ total +", sit_social="+ sit_social.rows[0].puntaje +" \
-                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo =1 AND tipo_post <> 'I'");
+                    where id_alumno="+ doc.id_alumno +" and id_gestion="+ doc.id_gestion +" AND id_periodo ="+ doc.id_periodo +" AND tipo_post <> 'I'");
   //verificar del todo
   if(modifier.$set.sit_social===undefined&&modifier.$set.sit_acad===undefined)
     postulantesba.update(doc._id,{$set:{sit_social: Number(sit_social.rows[0].puntaje), sit_acad: total }});

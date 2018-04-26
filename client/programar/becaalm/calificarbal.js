@@ -1,5 +1,6 @@
 Template.calificarbal.onCreated(function(){
     this.gestion = new ReactiveVar(FlowRouter.getParam('ges'));
+    this.periodo = new ReactiveVar(FlowRouter.getParam('peri'));
     this.ifamiliar = new ReactiveVar([]);
     this.ieconomico = new ReactiveVar([]);
     this.iprocedencia = new ReactiveVar([]);
@@ -78,6 +79,9 @@ Template.calificarbal.helpers({
     },
     gestion:function(){
         return FlowRouter.getParam('ges');
+    },
+    periodo:function(){
+        return FlowRouter.getParam('peri');
     },
     //mongo
     existeMongo(){

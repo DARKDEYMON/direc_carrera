@@ -22,16 +22,19 @@ SimpleSchema.setDefaultMessages({
 designacionDct = new Mongo.Collection('designacionDct');
 
 designacionDctShema = new SimpleSchema({
-    docente_id : {
+    id_docente : {
         type : String,
         label : "Docente",
-        regEx: SimpleSchema.RegEx.Id,
+        //regEx: SimpleSchema.RegEx.Id,
         optional: false,
+        autoform : {
+            firstOption : '(Seleccione uno)',
+        },
     },
-    materia_id : {
+    id_materia : {
         type : String,
         label : "Asignar Materia",
-        regEx: SimpleSchema.RegEx.Id,
+        //regEx: SimpleSchema.RegEx.Id,
         optional: false,
         autoform : {
             firstOption : '(Seleccione una materia)',
@@ -40,34 +43,37 @@ designacionDctShema = new SimpleSchema({
             modifi = this.obj.$set || this.obj;
             /* no tan efic */
             //designacionDct.find({grupo:{$nin:[1,2]}}).fetch()
-            if(!(designacionDct.find({materia_id:modifi.materia_id,gestion:modifi.gestion,periodo:modifi.periodo,grupo:modifi.grupo}).count()===0))
+            if(!(designacionDct.find({id_docente:modifi.id_docente,id_gestion:modifi.id_gestion,id_periodo:modifi.id_periodo,id_grupo:modifi.id_grupo}).count()===0))
                 return ('designado');
         }
     },
-    gestion : {
+    id_gestion : {
         type : Number,
         label : "Gestion",
         optional: false,
-        /* vereificar si es asi */
+        /*
         autoValue : function(){
             return new Date().getFullYear();
         }
+        */
     },
     /* emulado */
-    periodo : {
+    id_periodo : {
         type : Number,
         label : "Periodo",
         optional: false,
-        /* vereificar si es asi */
+        /*
         autoValue : function(){
             da = new Date().getMonth();
             return  da>=5 ? 2 : 1;
         }
+        */
     },
-    grupo : {
+    id_grupo : {
         type : Number,
         label : "Grupo",
         optional : false,
+        /*
         autoform :{
             firstOption : '(Seleccione un grupo)',
             options : function(){
@@ -77,9 +83,10 @@ designacionDctShema = new SimpleSchema({
                 });
             }
         },
+        */
         custom : function(){
             //console.log('aqui');
-            if(!(designacionDct.find({materia_id:modifi.materia_id,gestion:modifi.gestion,periodo:modifi.periodo,grupo:modifi.grupo}).count()===0))
+            if(!(designacionDct.find({id_docente:modifi.id_docente,id_gestion:modifi.id_gestion,id_periodo:modifi.id_periodo,id_grupo:modifi.id_grupo}).count()===0))
                 return ('designado_grupo');
         }
     }

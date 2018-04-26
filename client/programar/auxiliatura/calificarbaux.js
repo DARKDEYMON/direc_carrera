@@ -1,5 +1,6 @@
 Template.calificarbaux.onCreated(function(){
     this.gestion = new ReactiveVar(FlowRouter.getParam('ges'));
+    this.periodo = new ReactiveVar(FlowRouter.getParam('peri'))
     this.materia = new ReactiveVar(FlowRouter.getParam('mat'));
     this.ru = new ReactiveVar(FlowRouter.getParam('ru'));
     this.postulante = new ReactiveVar({});
@@ -9,7 +10,7 @@ Template.calificarbaux.onCreated(function(){
         if(!user){
             return
         }
-        Meteor.subscribe('postulantebaux', self.gestion.get(), self.materia.get(), self.ru.get());
+        Meteor.subscribe('postulantebaux', self.gestion.get(), self.materia.get(), self.ru.get(), self.periodo.get());
         Meteor.call('getPostulanteAux',user.profile.carrera ,self.gestion.get() ,self.materia.get() ,self.ru.get() ,(error, result)=>{
             return self.postulante.set(result.rows[0]);
         });
@@ -19,6 +20,9 @@ Template.calificarbaux.onCreated(function(){
 Template.calificarbaux.helpers({
     gestion: function() {
         return Template.instance().gestion.get();
+    },
+    periodo: function(){
+        return Template.instance().periodo.get();
     },
     materia: function() {
         return Template.instance().materia.get();

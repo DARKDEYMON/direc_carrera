@@ -20,18 +20,23 @@ postulantesaux = new Mongo.Collection("postulantesaux");
 
 postulantesauxSchema = new SimpleSchema({
     id_alumno:{
-        type: String,
+        type: Number,
         label: "id alumno",
         optional: false
     },
     id_materia:{
-        type: String,
+        type: Number,
         label: "id materia",
         optional: false
     },
     id_gestion:{
-        type: String,
+        type: Number,
         label: "id gestion",
+        optional: false
+    },
+    id_periodo:{
+        type:Number,
+        label: "Periodo",
         optional: false
     },
     _nota:{

@@ -3,7 +3,13 @@
         <div></div>
         <div>
             <div class="container">
-                <h2>Lista de Postulantes</h2>     
+                <h2>Lista de Postulantes</h2>   
+                    <form class="form-group gest" data-required="true" method="">     
+                        <div class="form-group" data-required="true">
+                            <label class="control-label">Periodo</label>
+                            <input type="text" required class="form-control" id="periodo" name="periodo" value="{{ periodo }}" autocomplete="off" placeholder="Periodo">
+                        </div>
+                    </form>  
                     <table class="table table-bordered">
                       <thead>
                         <tr>
@@ -34,7 +40,7 @@
                                     <td>{{ _nota }}</td>
                                     <td>{{ estado _estado }}</td>
                                     <td>
-                                        <a href="{{pathFor 'calificarbaux' ges=gestion mat=id_materia ru=id_alumno }}" type="button" class="btn btn-primary">Calificar</a>
+                                        <a href="{{pathFor 'calificarbaux' ges=gestion mat=id_materia ru=id_alumno peri=periodo }}" type="button" class="btn btn-primary">Calificar</a>
                                     </td>
                                 </tr>
                             {{else}}
